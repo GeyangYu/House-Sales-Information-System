@@ -1,6 +1,6 @@
         <div id="sidebar">
             <div id="logo">
-                <a href="<?php echo base_url('/'); ?>">
+                <a href="<?php echo base_url('/dashboard'); ?>">
                     <img src="<?php echo base_url('assets/img/logo.png'); ?>" alt="Logo" />
                     浙江省房屋统计系统
                 </a>
