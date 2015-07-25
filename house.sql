@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2015-07-24 09:58:03
+-- Generation Time: 2015-07-25 09:44:54
 -- 服务器版本： 5.6.16
 -- PHP Version: 5.5.9
 
@@ -31,6 +31,9 @@ CREATE TABLE IF NOT EXISTS `house_building` (
   `building_id` int(11) NOT NULL,
   `building_structure` varchar(32) NOT NULL,
   `building_height` int(4) NOT NULL,
+  `project_number` varchar(16) NOT NULL,
+  `project_area` int(11) NOT NULL,
+  `project_total_suit` int(11) NOT NULL,
   PRIMARY KEY (`project_id`,`building_id`),
   KEY `building_id` (`building_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -39,17 +42,16 @@ CREATE TABLE IF NOT EXISTS `house_building` (
 -- 转存表中的数据 `house_building`
 --
 
-INSERT INTO `house_building` (`project_id`, `building_id`, `building_structure`, `building_height`) VALUES
-(1, 1, '钢砼', 13),
-(1, 2, '钢砼', 14),
-(1, 4, '钢砼', 13),
-(2, 6, '钢砼', 25),
-(3, 23, '钢砼', 27),
-(3, 25, '钢砼', 27),
-(4, 3, '钢砼', 31),
-(5, 14, '钢砼', 18),
-(5, 16, '钢砼', 18),
-(5, 21, '钢砼', 18);
+INSERT INTO `house_building` (`project_id`, `building_id`, `building_structure`, `building_height`, `project_number`, `project_area`, `project_total_suit`) VALUES
+(1, 2, '钢砼', 14, '30000222', 2222211, 1000),
+(1, 4, '钢砼', 13, '30000222', 2222211, 1000),
+(2, 6, '钢砼', 25, '22000222', 3333222, 600),
+(3, 23, '钢砼', 27, '30220222', 1223554, 500),
+(3, 25, '钢砼', 27, '30220222', 1223554, 500),
+(4, 3, '钢砼', 31, '00334411', 1223332, 930),
+(5, 16, '钢砼', 18, '02144452', 6445443, 588),
+(5, 17, '钢砼', 18, '02144452', 6445443, 588),
+(5, 21, '钢砼', 18, '12222113', 234432, 234);
 
 -- --------------------------------------------------------
 
@@ -66,9 +68,6 @@ CREATE TABLE IF NOT EXISTS `house_project` (
   `project_district` varchar(32) NOT NULL,
   `project_block` varchar(32) NOT NULL,
   `project_function` varchar(32) NOT NULL,
-  `project_number` varchar(16) NOT NULL,
-  `project_area` int(11) NOT NULL,
-  `project_total_suite` int(11) NOT NULL,
   `project_reserve` text,
   PRIMARY KEY (`project_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
@@ -77,12 +76,12 @@ CREATE TABLE IF NOT EXISTS `house_project` (
 -- 转存表中的数据 `house_project`
 --
 
-INSERT INTO `house_project` (`project_id`, `project_name`, `project_type`, `project_address`, `project_city`, `project_district`, `project_block`, `project_function`, `project_number`, `project_area`, `project_total_suite`, `project_reserve`) VALUES
-(1, '郡枫绿园', 0, '江干区丁桥', '杭州', '江干区', '丁桥', '保障', '30000222', 2222211, 1000, NULL),
-(2, '万家名城', 1, '余杭区良渚街道锦江路西', '杭州', '余杭区', '良渚', '商业', '22000222', 3333222, 600, NULL),
-(3, '香醍溪岸花苑', 1, '余杭区S304省道与宏达路交汇处', '杭州', '余杭区', '临平', '住宅', '30220222', 1223554, 500, NULL),
-(4, '旭辉府', 1, '余杭区崇贤街道崇杭街北侧', '杭州', '余杭区', '崇贤', '住宅', '00334411', 1223332, 930, NULL),
-(5, '竹海水韵花园春风里', 1, '余杭区闲林镇', '杭州', '余杭区', '闲林', '住宅', '02144452', 6445443, 588, NULL);
+INSERT INTO `house_project` (`project_id`, `project_name`, `project_type`, `project_address`, `project_city`, `project_district`, `project_block`, `project_function`, `project_reserve`) VALUES
+(1, '郡枫绿园', 0, '江干区丁桥', '杭州', '江干区', '丁桥', '保障', NULL),
+(2, '万家名城', 1, '余杭区良渚街道锦江路西', '杭州', '余杭区', '良渚', '商业', NULL),
+(3, '香醍溪岸花苑', 1, '余杭区S304省道与宏达路交汇处', '杭州', '余杭区', '临平', '住宅', NULL),
+(4, '旭辉府', 1, '余杭区崇贤街道崇杭街北侧', '杭州', '余杭区', '崇贤', '住宅', NULL),
+(5, '竹海水韵花园春风里', 1, '余杭区闲林镇', '杭州', '余杭区', '闲林', '住宅', NULL);
 
 -- --------------------------------------------------------
 
