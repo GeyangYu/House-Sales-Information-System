@@ -16,4 +16,25 @@ class Dashboard extends CI_Controller {
         );
         $this->load->view('index', $data);
     }
+
+    public function import() {
+        $data = array(
+
+        );
+        $this->load->view('import', $data);
+    }
+
+    public function edit() {
+        $data = array(
+
+        );
+        $this->load->view('edit', $data);
+    }
+
+    public function search() {
+        $data = array(
+
+        );
+        $this->load->view('search', $data);
+    }
 }

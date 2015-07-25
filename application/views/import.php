@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>控制板 | 浙江省房屋统计系统</title>
+	<title>导入数据 | 浙江省房屋统计系统</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Icon -->
@@ -40,7 +40,7 @@
             <!-- Content -->
             <div id="content">
                 <h2 class="page-header">
-                    <i class="fa fa-dashboard"></i> 控制板
+                    <i class="fa fa-upload"></i> 导入数据
                 </h2>
             </div> <!-- #content -->
         </div> <!-- #container -->
