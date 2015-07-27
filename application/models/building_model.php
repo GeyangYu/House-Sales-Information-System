@@ -15,4 +15,10 @@ class Building_model extends CI_Model {
 		
 	}
 	
+	public function get_all_buildings() {
+        $sql = 'SELECT * FROM house_building NATURAL JOIN house_project';
+        $result_set = $this->db->query($sql);
+        return $result_set->result_array();
+    }
+	
 }

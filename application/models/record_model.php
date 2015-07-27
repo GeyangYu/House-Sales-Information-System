@@ -15,8 +15,11 @@ class Record_model extends CI_Model {
 		$this->load->database(); 
 	}
 	
-	public function f() {
-		return 10;
-	}
+	public function get_all_records() {
+        $sql = 'SELECT * FROM house_record NATURAL JOIN house_project';
+        $result_set = $this->db->query($sql);
+        return $result_set->result_array();
+    }
+    
 	
 }
