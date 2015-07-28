@@ -85,7 +85,7 @@
                         </div> <!-- .row-fluid -->
                         <div class="row-fluid">
                             <div class="span3">
-                                <label for="block">行政区划</label>
+                                <label for="block">板块名称</label>
                                 <div class="control-group">
                                     <input id="block" class="span12" type="text" />
                                 </div> <!-- .control-group -->
