@@ -14,6 +14,12 @@ String.prototype.format = function() {
     return newStr;
 }
 
+if( !String.prototype.trim ) {
+    String.prototype.trim = function () {
+        return this.replace(/^\s+|\s+$/g,'');
+    };
+}
+
 $('#sidebar-toggle').click(function() {
     var isSidebarShown = $('#sidebar').is(':visible');
 

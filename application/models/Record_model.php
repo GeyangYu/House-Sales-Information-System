@@ -16,6 +16,43 @@ class Record_model extends CI_Model {
         $result_set = $this->db->query($sql);
         return $result_set->row_array();
     }
+
+    /**
+     * [get_number_of_records description]
+     * @param  [type] $city               - 城市
+     * @param  [type] $time_lower_bound   - 起始时间(YYYY-mm-dd)
+     * @param  [type] $time_upper_bound   - 结束时间(YYYY-mm-dd)
+     * @param  [type] $district           - 行政区划
+     * @param  [type] $block              - 板块名称
+     * @param  [type] $project_name       - 项目名称
+     * @param  [type] $function           - 功能区块
+     * @param  [type] $building           - 幢号
+     * @param  [type] $project_type       - 项目类型
+     * @param  [type] $height_lower_bound - 房屋高度的下界
+     * @param  [type] $height_upper_bound - 房屋高度的上界
+     * @param  [type] $area_lower_bound   - 房屋面积的下界
+     * @param  [type] $area_upper_bound   - 房屋面积的上界
+     * @param  [type] $number             - 预售证号
+     * @return [type]                     [description]
+     */
+    public function get_number_of_records($city, $time_lower_bound, $time_upper_bound, 
+        $district, $block, $project_name, $function, $building, $project_type, 
+        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
+        $area_upper_bound, $number) {
+        $parameters = array($city, $time_lower_bound, $time_upper_bound);
+        $sql        = 'SELECT * FROM house_record '. 
+                      'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
+                      'WHERE project_city = ? '.
+                      'AND record_time >= ? AND record_time <= ?';
+
+        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
+                        $project_name, $function, $building, $project_type, $height_lower_bound, 
+                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
+
+        $result_set = $this->db->query($sql, $parameters);
+        return $result_set->num_rows();
+    }
     
     /**
      * Get records using several conditions.
@@ -51,11 +88,10 @@ class Record_model extends CI_Model {
         $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
                         $project_name, $function, $building, $project_type, $height_lower_bound, 
                         $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
-        $sql       .= ' LIMIT ?, ?';
+        $sql       .= ' ORDER BY record_time LIMIT ?, ?';
         array_push($parameters, $offset, $limit);
         
         $result_set = $this->db->query($sql, $parameters);
-        // echo $this->db->last_query();
         return $result_set->result_array();
     }
 
@@ -88,7 +124,7 @@ class Record_model extends CI_Model {
             array_push($parameters, $block);
         }
         if ( $project_name != NULL ) {
-            $base_sql .= ' AND project_project_name = ?';
+            $base_sql .= ' AND project_name = ?';
             array_push($parameters, $project_name);
         }
         if ( $function != NULL ) {

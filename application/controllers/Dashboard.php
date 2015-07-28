@@ -103,7 +103,7 @@ class Dashboard extends CI_Controller {
         $area_lower_bound   = NULL;
         $area_upper_bound   = NULL;
         $limit              = 50;
-        $offset             = (( $page_number <= 0 ? 1 : $page_number ) - 1) * $limit;
+        $offset             = $page_number <= 1 ? 0 : ($page_number - 1) * $limit - 1;
 
         if ( $height_type != NULL ) {
             if ( $height_type == '多层住宅' ) {
@@ -135,13 +135,18 @@ class Dashboard extends CI_Controller {
             }
         }
 
-        $records        = $this->get_report_records($city, $time_lower_bound, $time_upper_bound, 
-                            $district, $block, $project_name, $function, $building, $project_type, 
-                            $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $offset, $limit);
-        $result         = array(
+        $records            = $this->get_report_records($city, $time_lower_bound, $time_upper_bound, 
+                                $district, $block, $project_name, $function, $building, $project_type, 
+                                $height_lower_bound, $height_upper_bound, $area_lower_bound, 
+                                $area_upper_bound, $number, $offset, $limit);
+        $number_of_records  = $this->Record_model->get_number_of_records($city, $time_lower_bound, 
+                                $time_upper_bound, $district, $block, $project_name, $function, $building, 
+                                $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
+                                $area_upper_bound, $number);
+        $result             = array(
             'isSuccessful'  => count($records) != 0,
             'records'       => $records,
+            'totalPages'    => ceil($number_of_records / $limit),
         );
 
         echo json_encode($result);
