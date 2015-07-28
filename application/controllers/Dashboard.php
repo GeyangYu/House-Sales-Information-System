@@ -125,13 +125,13 @@ class Dashboard extends CI_Controller {
             }
         }
         if ( $area_type != NULL ) {
-            if ( $height_type == '90平方米以下' ) {
-                $height_upper_bound = 89.99;
-            } else if ( $height_type == '90-144平方米' ) {
-                $height_lower_bound = 90;
-                $height_upper_bound = 144;
-            } else if ( $height_type == '144平方米以上' ) {
-                $height_lower_bound = 144.01;
+            if ( $area_type == '90平方米以下' ) {
+                $area_upper_bound = 89.99;
+            } else if ( $area_type == '90-144平方米' ) {
+                $area_lower_bound = 90;
+                $area_upper_bound = 144;
+            } else if ( $area_type == '144平方米以上' ) {
+                $area_lower_bound = 144.01;
             }
         }
 

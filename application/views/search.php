@@ -240,7 +240,7 @@
                     </div> <!-- .body -->
                 </div> <!-- #columns -->
                 <div id="main-content">
-                    <div class="alert alert-error hide">暂无可用的数据.</div>
+                    <div class="alert alert-error hide">暂无符合条件的数据.</div>
                     <table class="table table-striped">
                         <thead>
                             <tr>
