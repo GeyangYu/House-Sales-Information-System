@@ -1,0 +1,8 @@
+div#conditions label {
+	font-weight: bold;
+}
+
+div#main-content table.table thead {
+	background-color: #16a085;
+	color: #fff;
+}
