@@ -239,7 +239,7 @@
                         </div> <!-- .row-fluid -->
                     </div> <!-- .body -->
                 </div> <!-- #columns -->
-                <div id="columns" class="section">
+                <div id="stats" class="section">
                     <div class="header">
                         <h5>数据统计列</h5>
                         <button class="btn btn-info">展开</button>
@@ -338,10 +338,10 @@
             getCondictions(1);
         });
 
-        $('input[name=group-by-field]').change(function() {
-            if ( $(this).is(':checked') ) {
+        $('label.radio', '#stats').click(function() {
+            setTimeout(function() {
                 getCondictions(1);
-            }
+            }, 100);
         });
 
         $('#pagination > ul').delegate('li', 'click', function(e) {
@@ -365,19 +365,23 @@
     </script>
     <script type="text/javascript">
         function getCondictions(pageNumber) {
-            var city        = $('#city').val().trim() || null,
-                startTime   = $('#start-time').val().trim() || null,
-                endTime     = $('#end-time').val().trim() || null,
-                district    = $('#district').val().trim() || null,
-                block       = $('#block').val().trim() || null,
-                projectName = $('#project-name').val().trim() || null,
-                funktion    = $('#function').val().trim() || null,
-                building    = $('#building').val().trim() || null,
-                projectType = $('#project-type').val().trim() || null,
-                heightType  = $('#height-type').val().trim() || null,
-                areaType    = $('#area-type').val().trim() || null,
-                number      = $('#number').val().trim() || null;
-                groupBy     = $('[name=group-by-field]:checked').val() || null;
+            var city            = $('#city').val().trim() || null,
+                startTime       = $('#start-time').val().trim() || null,
+                endTime         = $('#end-time').val().trim() || null,
+                district        = $('#district').val().trim() || null,
+                block           = $('#block').val().trim() || null,
+                projectName     = $('#project-name').val().trim() || null,
+                funktion        = $('#function').val().trim() || null,
+                building        = $('#building').val().trim() || null,
+                projectType     = $('#project-type').val().trim() || null,
+                heightType      = $('#height-type').val().trim() || null,
+                areaType        = $('#area-type').val().trim() || null,
+                number          = $('#number').val().trim() || null;
+                checkedStat     = $('label.radio.checked').attr('for'),
+                groupBy         = checkedStat != null ? checkedStat.substr(5) : 'project-id';
+
+            console.log($('label.radio.checked'));
+            console.log(checkedStat);
 
             return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
         }

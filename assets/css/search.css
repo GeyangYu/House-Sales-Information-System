@@ -42,7 +42,7 @@ div#condictions div.body label {
 	font-weight: bold;
 }
 
-div#columns div.body label.radio,
+div#stats div.body label.radio,
 div#columns div.body label.checkbox {
 	margin: 10px 0 5px;
 }
