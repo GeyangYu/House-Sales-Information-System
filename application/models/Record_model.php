@@ -170,12 +170,22 @@ class Record_model extends CI_Model {
      * @param  [type] $time_upper_bound [description]
      * @return [type]             [description]
      */
-    public function get_sold_suit($city, $time_lower_bound, $time_upper_bound) {
+    public function get_sold_suit($city, $time_lower_bound, $time_upper_bound, $group_by) {
         $sql        = 'SELECT project_id, building_id, COUNT(*) AS sold_suit '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
-                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '.
-                      'GROUP BY project_id, building_id';
+                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
+        
+        if ( $group_by == '' || $group_by == 'project' ) {
+	        // Default
+	        $sql   .= 'GROUP BY project_id';
+        } else if ( $group_by == 'district' ) {
+	        $sql   .= 'GROUP BY district';
+        } else if ( $group_by == 'block' ) {
+	        $sql   .= 'GROUP BY block';
+        }  else if ( $group_by == 'function' ) {
+	        $sql   .= 'GROUP BY function';
+        }
         
         $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
         return $result_set->result_array(); 
@@ -188,13 +198,13 @@ class Record_model extends CI_Model {
      * @param  [type] $time_upper_bound [description]
      * @return [type]             [description]
      */
-    public function get_sold_price($city, $time_lower_bound, $time_upper_bound) {
+    public function get_sold_price($city, $time_lower_bound, $time_upper_bound, $group_by) {
         $sql        = 'SELECT project_id, building_id, SUM(record_price) AS sold_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
-                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '.
-                      'GROUP BY project_id, building_id';
-        
+                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
+                      
+                
         $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
         return $result_set->result_array();
     }
@@ -206,7 +216,7 @@ class Record_model extends CI_Model {
      * @param  [type] $time_upper_bound [description]
      * @return [type]             [description]
      */
-    public function get_sold_area($city, $time_lower_bound, $time_upper_bound) {
+    public function get_sold_area($city, $time_lower_bound, $time_upper_bound, $group_by) {
         $sql        = 'SELECT project_id, building_id, SUM(record_area) AS sold_area '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
@@ -224,7 +234,7 @@ class Record_model extends CI_Model {
      * @param  [type] $time_upper_bound [description]
      * @return [type]             [description]
      */
-    public function get_average_price($city, $time_lower_bound, $time_upper_bound) {
+    public function get_average_price($city, $time_lower_bound, $time_upper_bound, $group_by, $group_by) {
         $sql        = 'SELECT project_id, building_id, AVG(record_price) AS average_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
