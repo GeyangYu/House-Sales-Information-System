@@ -238,11 +238,10 @@ class Record_model extends CI_Model {
     /**
      * [get_rest_suit description]
      * @param  [type] $city       [description]
-     * @param  [type] $time_lower_bound  [description]
      * @param  [type] $time_upper_bound [description]
      * @return [type]             [description]
      */
-    public function get_rest_suit($city, $time_lower_bound, $time_upper_bound) {
+    public function get_rest_suit($city, $time_upper_bound) {
         $sql        = 'SELECT b2.project_id, b2.building_id, b2.project_total_suit - ('.
                       '    SELECT COUNT(*) '.
                       '    FROM house_record '.
@@ -250,10 +249,10 @@ class Record_model extends CI_Model {
                       '    NATURAL JOIN house_project '.
                       '    WHERE b1.project_number = b2.project_number '.
                       '    AND project_city = ? '.
-                      '    AND record_time >= ? AND record_time <= ?'.
+                      '    AND record_time <= ?'.
                       ') AS rest_suit '.
                       'FROM house_building b2';
-        $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
+        $result_set = $this->db->query($sql, array($city, $time_upper_bound));
         return $result_set->result_array();  
     }
 

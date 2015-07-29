@@ -71,7 +71,7 @@ class Dashboard extends CI_Controller {
         $max_date   = $date_range['max_time'];
 
         $start      = (new DateTime($min_date))->modify('first day of this month');
-        $end        = (new DateTime($max_date))->modify('first day of this month');
+        $end        = (new DateTime($max_date))->modify('first day of next month');
         $interval   = DateInterval::createFromDateString('1 month');
         $period     = new DatePeriod($start, $interval, $end);
 
@@ -103,7 +103,7 @@ class Dashboard extends CI_Controller {
         $area_lower_bound   = NULL;
         $area_upper_bound   = NULL;
         $limit              = 50;
-        $offset             = $page_number <= 1 ? 0 : ($page_number - 1) * $limit - 1;
+        $offset             = $page_number <= 1 ? 0 : ($page_number - 1) * $limit;
 
         if ( $height_type != NULL ) {
             if ( $height_type == '多层住宅' ) {
@@ -184,7 +184,7 @@ class Dashboard extends CI_Controller {
         $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($city, $time_lower_bound, $time_upper_bound), 'sold_price');
         $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($city, $time_lower_bound, $time_upper_bound), 'sold_area');
         $average_price  = $this->get_map_result($this->Record_model->get_average_price($city, $time_lower_bound, $time_upper_bound), 'average_price');
-        $rest_suit      = $this->get_map_result($this->Record_model->get_rest_suit($city, $time_lower_bound, $time_upper_bound), 'rest_suit');
+        $rest_suit      = $this->get_map_result($this->Record_model->get_rest_suit($city, $time_upper_bound), 'rest_suit');
 
         foreach ( $records as &$record ) {
             $project_city               = $record['project_city'];
