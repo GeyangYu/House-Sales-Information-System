@@ -95,6 +95,7 @@ class Dashboard extends CI_Controller {
         $area_type          = $this->input->get('areaType');
         $number             = $this->input->get('number');
         $page_number        = $this->input->get('page');
+        $group_by           = $this->input->get('groupBy');
 
         $time_lower_bound   = (new DateTime($start_time))->modify('first day of this month')->format('Y-m-d');
         $time_upper_bound   = (new DateTime($end_time))->modify('last day of this month')->format('Y-m-d');
@@ -138,7 +139,7 @@ class Dashboard extends CI_Controller {
         $records            = $this->get_report_records($city, $time_lower_bound, $time_upper_bound, 
                                 $district, $block, $project_name, $function, $building, $project_type, 
                                 $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                                $area_upper_bound, $number, $offset, $limit);
+                                $area_upper_bound, $number, $offset, $limit, $group_by);
         $number_of_records  = $this->Record_model->get_number_of_records($city, $time_lower_bound, 
                                 $time_upper_bound, $district, $block, $project_name, $function, $building, 
                                 $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
@@ -175,15 +176,15 @@ class Dashboard extends CI_Controller {
     private function get_report_records($city, $time_lower_bound, $time_upper_bound, 
         $district, $block, $project_name, $function, $building, $project_type, 
         $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $offset, $limit) {
+        $area_upper_bound, $number, $offset, $limit, $group_by) {
         $records        = $this->Record_model->get_records($city, $time_lower_bound, $time_upper_bound, 
                             $district, $block, $project_name, $function, $building, $project_type, 
                             $height_lower_bound, $height_upper_bound, $area_lower_bound, 
                             $area_upper_bound, $number, $offset, $limit);
-        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($city, $time_lower_bound, $time_upper_bound), 'sold_suit');
-        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($city, $time_lower_bound, $time_upper_bound), 'sold_price');
-        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($city, $time_lower_bound, $time_upper_bound), 'sold_area');
-        $average_price  = $this->get_map_result($this->Record_model->get_average_price($city, $time_lower_bound, $time_upper_bound), 'average_price');
+        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_suit');
+        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_price');
+        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_area');
+        $average_price  = $this->get_map_result($this->Record_model->get_average_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'average_price');
         $rest_suit      = $this->get_map_result($this->Record_model->get_rest_suit($city, $time_upper_bound), 'rest_suit');
 
         foreach ( $records as &$record ) {
