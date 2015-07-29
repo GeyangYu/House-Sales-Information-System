@@ -82,13 +82,13 @@ class Dashboard extends CI_Controller {
      * [get_records description]
      */
     public function get_records() {
-        $city               = $this->input->get('city');
+        $project_city       = $this->input->get('city');
         $start_time         = $this->input->get('startTime');
         $end_time           = $this->input->get('endTime');
-        $district           = $this->input->get('district');
-        $block              = $this->input->get('block');
+        $project_district   = $this->input->get('district');
+        $project_block      = $this->input->get('block');
         $project_name       = $this->input->get('projectName');
-        $function           = $this->input->get('function');
+        $project_function   = $this->input->get('function');
         $building           = $this->input->get('building');
         $project_type       = $this->input->get('projectType');
         $height_type        = $this->input->get('heightType');
@@ -136,12 +136,12 @@ class Dashboard extends CI_Controller {
             }
         }
 
-        $records            = $this->get_report_records($city, $time_lower_bound, $time_upper_bound, 
-                                $district, $block, $project_name, $function, $building, $project_type, 
+        $records            = $this->get_report_records($project_city, $time_lower_bound, $time_upper_bound, 
+                                $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
                                 $height_lower_bound, $height_upper_bound, $area_lower_bound, 
                                 $area_upper_bound, $number, $offset, $limit, $group_by);
-        $number_of_records  = $this->Record_model->get_number_of_records($city, $time_lower_bound, 
-                                $time_upper_bound, $district, $block, $project_name, $function, $building, 
+        $number_of_records  = $this->Record_model->get_number_of_records($project_city, $time_lower_bound, 
+                                $time_upper_bound, $project_district, $project_block, $project_name, $project_function, $building, 
                                 $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
                                 $area_upper_bound, $number);
         $result             = array(
@@ -155,11 +155,11 @@ class Dashboard extends CI_Controller {
 
     private function get_group_by_field($group_by) {
         if ( $group_by == 'district' ) {
-            return 'district';
+            return 'project_district';
         } else if ( $group_by == 'block' ) {
-            return 'block';
+            return 'project_block';
         }  else if ( $group_by == 'function' ) {
-            return 'function';
+            return 'project_function';
         } else {
             return 'project_id';
         }
@@ -167,13 +167,13 @@ class Dashboard extends CI_Controller {
 
     /**
      * [get_report_records description]
-     * @param  [type] $city               [description]
+     * @param  [type] $project_city               [description]
      * @param  [type] $time_lower_bound   [description]
      * @param  [type] $time_upper_bound   [description]
-     * @param  [type] $district           [description]
-     * @param  [type] $block              [description]
+     * @param  [type] $project_district           [description]
+     * @param  [type] $project_block              [description]
      * @param  [type] $project_name       [description]
-     * @param  [type] $function           [description]
+     * @param  [type] $project_function           [description]
      * @param  [type] $building           [description]
      * @param  [type] $project_type       [description]
      * @param  [type] $height_lower_bound [description]
@@ -185,24 +185,26 @@ class Dashboard extends CI_Controller {
      * @param  [type] $limit              [description]
      * @return [type]                     [description]
      */
-    private function get_report_records($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
+    private function get_report_records($project_city, $time_lower_bound, $time_upper_bound, 
+        $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
         $height_lower_bound, $height_upper_bound, $area_lower_bound, 
         $area_upper_bound, $number, $offset, $limit, $group_by) {
-        $records        = $this->Record_model->get_records($city, $time_lower_bound, $time_upper_bound, 
-                            $district, $block, $project_name, $function, $building, $project_type, 
+        $records        = $this->Record_model->get_records($project_city, $time_lower_bound, $time_upper_bound, 
+                            $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
                             $height_lower_bound, $height_upper_bound, $area_lower_bound, 
                             $area_upper_bound, $number, $offset, $limit);
-        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_suit', $group_by);
-        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_price', $group_by);
-        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_area', $group_by);
-        $average_price  = $this->get_map_result($this->Record_model->get_average_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'average_price', $group_by);
-        $rest_suit      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_suit($city, $time_upper_bound), 'rest_suit');
+        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($project_city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_suit', $group_by);
+        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($project_city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_price', $group_by);
+        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($project_city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_area', $group_by);
+        $average_price  = $this->get_map_result($this->Record_model->get_average_price($project_city, $time_lower_bound, $time_upper_bound, $group_by), 'average_price', $group_by);
+        $rest_suit      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_suit($project_city, $time_upper_bound), 'rest_suit');
 
         foreach ( $records as &$record ) {
-            $project_city               = $record['project_city'];
             $project_id                 = $record['project_id'];
             $building_id                = $record['building_id'];
+            $project_district           = $record['project_district'];
+            $project_block              = $record['project_block'];
+            $project_function           = $record['project_function'];
 
             $record['sold_suit']        = $sold_suit[$$group_by];
             $record['sold_price']       = $sold_price[$$group_by];

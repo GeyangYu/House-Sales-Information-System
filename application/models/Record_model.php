@@ -174,9 +174,9 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, COUNT(*) AS sold_suit '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
-                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
-        $sql       .= $this->get_group_by_sql($group_by);
-        
+                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '.
+                      'GROUP BY '. $group_by;
+
         $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
         return $result_set->result_array();
     }
@@ -192,8 +192,8 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, SUM(record_price) AS sold_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
-                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
-        $sql       .= $this->get_group_by_sql($group_by);
+                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '.
+                      'GROUP BY '. $group_by;
 
         $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
         return $result_set->result_array();
@@ -210,9 +210,9 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, SUM(record_area) AS sold_area '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
-                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
-        $sql       .= $this->get_group_by_sql($group_by);
-        
+                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '.
+                      'GROUP BY '. $group_by;
+
         $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
         return $result_set->result_array();
     }
@@ -228,23 +228,11 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, AVG(record_price) AS average_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
-                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
-        $sql       .= $this->get_group_by_sql($group_by);
+                      'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '.
+                      'GROUP BY '. $group_by;
 
         $result_set = $this->db->query($sql, array($city, $time_lower_bound, $time_upper_bound));
         return $result_set->result_array();
-    }
-
-    private function get_group_by_sql($group_by) {
-        if ( $group_by == 'district' ) {
-            return ' GROUP BY district';
-        } else if ( $group_by == 'block' ) {
-            return ' GROUP BY block';
-        }  else if ( $group_by == 'function' ) {
-            return ' GROUP BY function';
-        } else {
-            return ' GROUP BY project_id';
-        }
     }
     
     /**

@@ -239,6 +239,36 @@
                         </div> <!-- .row-fluid -->
                     </div> <!-- .body -->
                 </div> <!-- #columns -->
+                <div id="columns" class="section">
+                    <div class="header">
+                        <h5>数据统计列</h5>
+                        <button class="btn btn-info">展开</button>
+                    </div> <!-- .header -->
+                    <div class="body hide">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                <label class="radio" for="stat-project-name">
+                                    <input name="group-by-field" id="stat-project-name" value="project-id" type="radio" data-toggle="radio" checked> 项目名称
+                                </label>
+                            </div> <!-- .span3 -->
+                            <div class="span3">
+                                <label class="radio" for="stat-district">
+                                    <input name="group-by-field" id="stat-district" value="district" type="radio" data-toggle="radio"> 行政区划
+                                </label>
+                            </div> <!-- .span3 -->
+                            <div class="span3">
+                                <label class="radio" for="stat-block">
+                                    <input name="group-by-field" id="stat-block" value="block" type="radio" data-toggle="radio"> 板块名称
+                                </label>
+                            </div> <!-- .span3 -->
+                            <div class="span3">
+                                <label class="radio" for="stat-function">
+                                    <input name="group-by-field" id="stat-function" value="function" type="radio" data-toggle="radio"> 功能区块
+                                </label>
+                            </div> <!-- .span3 -->
+                        </div> <!-- .row-fluid -->
+                    </div> <!-- .body -->
+                </div> <!-- #stats -->
                 <div id="main-content">
                     <div class="alert alert-error hide">暂无符合条件的数据.</div>
                     <table class="table table-striped">
@@ -308,6 +338,12 @@
             getCondictions(1);
         });
 
+        $('input[name=group-by-field]').change(function() {
+            if ( $(this).is(':checked') ) {
+                getCondictions(1);
+            }
+        });
+
         $('#pagination > ul').delegate('li', 'click', function(e) {
             e.preventDefault();
             if ( $(this).hasClass('disabled') ) {
@@ -341,12 +377,13 @@
                 heightType  = $('#height-type').val().trim() || null,
                 areaType    = $('#area-type').val().trim() || null,
                 number      = $('#number').val().trim() || null;
+                groupBy     = $('[name=group-by-field]:checked').val() || null;
 
-            return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber);
+            return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
         }
     </script>
     <script type="text/javascript">
-        function getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber) {
+        function getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy) {
             var request = {
                 'city': city,
                 'startTime': startTime,
@@ -360,7 +397,8 @@
                 'heightType': heightType,
                 'areaType': areaType,
                 'number': number,
-                'page': pageNumber
+                'page': pageNumber,
+                'groupBy': groupBy
             };
 
             $.ajax({
