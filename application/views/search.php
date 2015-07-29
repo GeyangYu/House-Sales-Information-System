@@ -380,9 +380,6 @@
                 checkedStat     = $('label.radio.checked').attr('for'),
                 groupBy         = checkedStat != null ? checkedStat.substr(5) : 'project-id';
 
-            console.log($('label.radio.checked'));
-            console.log(checkedStat);
-
             return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
         }
     </script>
