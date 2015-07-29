@@ -95,7 +95,7 @@ class Dashboard extends CI_Controller {
         $area_type          = $this->input->get('areaType');
         $number             = $this->input->get('number');
         $page_number        = $this->input->get('page');
-        $group_by           = $this->input->get('groupBy');
+        $group_by           = $this->get_group_by_field($this->input->get('groupBy'));
 
         $time_lower_bound   = (new DateTime($start_time))->modify('first day of this month')->format('Y-m-d');
         $time_upper_bound   = (new DateTime($end_time))->modify('last day of this month')->format('Y-m-d');
@@ -153,6 +153,18 @@ class Dashboard extends CI_Controller {
         echo json_encode($result);
     }
 
+    private function get_group_by_field($group_by) {
+        if ( $group_by == 'district' ) {
+            return 'district';
+        } else if ( $group_by == 'block' ) {
+            return 'block';
+        }  else if ( $group_by == 'function' ) {
+            return 'function';
+        } else {
+            return 'project_id';
+        }
+    }
+
     /**
      * [get_report_records description]
      * @param  [type] $city               [description]
@@ -181,23 +193,42 @@ class Dashboard extends CI_Controller {
                             $district, $block, $project_name, $function, $building, $project_type, 
                             $height_lower_bound, $height_upper_bound, $area_lower_bound, 
                             $area_upper_bound, $number, $offset, $limit);
-        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_suit');
-        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_price');
-        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_area');
-        $average_price  = $this->get_map_result($this->Record_model->get_average_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'average_price');
-        $rest_suit      = $this->get_map_result($this->Record_model->get_rest_suit($city, $time_upper_bound), 'rest_suit');
+        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_suit', $group_by);
+        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_price', $group_by);
+        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($city, $time_lower_bound, $time_upper_bound, $group_by), 'sold_area', $group_by);
+        $average_price  = $this->get_map_result($this->Record_model->get_average_price($city, $time_lower_bound, $time_upper_bound, $group_by), 'average_price', $group_by);
+        $rest_suit      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_suit($city, $time_upper_bound), 'rest_suit');
 
         foreach ( $records as &$record ) {
             $project_city               = $record['project_city'];
             $project_id                 = $record['project_id'];
             $building_id                = $record['building_id'];
-            $record['sold_suit']        = $sold_suit[$project_id][$building_id];
-            $record['sold_price']       = $sold_price[$project_id][$building_id];
-            $record['sold_area']        = $sold_area[$project_id][$building_id];
-            $record['average_price']    = $average_price[$project_id][$building_id];
+
+            $record['sold_suit']        = $sold_suit[$$group_by];
+            $record['sold_price']       = $sold_price[$$group_by];
+            $record['sold_area']        = $sold_area[$$group_by];
+            $record['average_price']    = $average_price[$$group_by];
             $record['rest_suit']        = $rest_suit[$project_id][$building_id];
         }
         return $records;
+    }
+
+    /**
+     * 将ResultSet返回的数组转换为Map, 以方便索引.
+     * @param  Array  $result_set - 数据库查询结果
+     * @param  String $key        - 结果集中的字段名(例如: sold_suit, sold_price, etc.)
+     * @param  String $group_by   - 生成Map时的key, 根据什么字段GROUP BY, 那么就以该作为Map的key
+     * @return [type]             [description]
+     */
+    private function get_map_result($result_set, $key, $group_by) {
+        $map_result = array();
+
+        foreach ( $result_set as $row_set ) {
+            $group_by_key   = $row_set[$group_by];
+            $value          = $row_set[$key];
+            $map_result[$group_by_key] = $value;
+        }
+        return $map_result;
     }
 
     /**
@@ -206,7 +237,7 @@ class Dashboard extends CI_Controller {
      * @param  [type] $key        [description]
      * @return [type]             [description]
      */
-    private function get_map_result($result_set, $key) {
+    private function get_map_result_using_project_id_and_building_id($result_set, $key) {
         $map_result = array();
 
         foreach ( $result_set as $row_set ) {
