@@ -38,6 +38,44 @@ class Dashboard extends CI_Controller {
     }
 
     /**
+     * 处理导入数据的请求.
+     * @return 包含数据导入结果的JSON数据
+     */
+    public function import_data() {
+        $upload_result = $this->upload_files();
+        $import_result = array(
+            'isSuccessful'  => true,
+            'data'          => array(),
+        );
+
+        if ( $upload_result['isSuccessful'] ) {
+            // DO SOMETHING
+        }
+        $result        = array(
+            'isSuccessful'  => $upload_result['isSuccessful'] && $import_result['isSuccessful'],
+            'message'       => $upload_result['message'],
+            'data'          => $import_result['data'],
+        );
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($upload_result));
+    }
+
+    /**
+     * 上传需要导入的数据文件.
+     * @return 数据上传结果
+     */
+    private function upload_files() {
+        $config['upload_path']      = './application/uploads/';
+        $config['allowed_types']    = 'xls|xlsx';
+        $config['max_size']         = '1024';
+        $this->load->library('lib_upload', $config);
+
+        return $this->lib_upload->do_upload();
+    }
+
+    /**
      * Render to the edit page.
      */
     public function edit() {
@@ -48,7 +86,7 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * Render to the search page.
+     * 加载数据搜索页面.
      */
     public function search() {
         $cities         = $this->Project_model->get_cities();
@@ -62,8 +100,8 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * [get_time_period description]
-     * @return [type] [description]
+     * 获取数据库中记录的日期的最大值和最小值.
+     * @return DatePeriod对象, 包含数据的起始日期和结束日期
      */
     private function get_time_period() {
         $date_range = $this->Record_model->get_date_range();
@@ -79,7 +117,7 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * [get_records description]
+     * 根据筛选条件获取指定的数据记录集, 以JSON的形式返回.
      */
     public function get_records() {
         $project_city       = $this->input->get('city');
@@ -150,9 +188,17 @@ class Dashboard extends CI_Controller {
             'totalPages'    => ceil($number_of_records / $limit),
         );
 
-        echo json_encode($result);
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
     }
 
+    /**
+     * 根据Web传递的参数获取数据库中的数据字段名称.
+     * @param  String $group_by - 需要汇总的数据字段名称
+     * @return 数据库中的数据字段名称
+     */
     private function get_group_by_field($group_by) {
         if ( $group_by == 'district' ) {
             return 'project_district';
@@ -166,7 +212,7 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * [get_report_records description]
+     * 根据筛选条件获取指定的数据记录集.
      * @param  [type] $project_city               [description]
      * @param  [type] $time_lower_bound   [description]
      * @param  [type] $time_upper_bound   [description]

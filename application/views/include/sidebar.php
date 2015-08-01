@@ -1,6 +1,6 @@
         <div id="sidebar">
             <div id="logo">
-                <a href="<?php echo base_url('/dashboard'); ?>">
+                <a href="<?php echo base_url('/'); ?>">
                     <img src="<?php echo base_url('assets/img/logo.png'); ?>" alt="Logo" />
                     浙江省房屋统计系统
                 </a>
@@ -19,7 +19,7 @@
             <div id="sidebar-nav">
                 <ul class="nav">
                     <li class="nav-item primary-nav-item">
-                        <a href="<?php echo base_url('/dashboard'); ?>"><i class="fa fa-dashboard"></i> 控制板</a>
+                        <a href="<?php echo base_url('/'); ?>"><i class="fa fa-dashboard"></i> 控制板</a>
                     </li>
                     <li class="nav-item primary-nav-item">
                         <a href="<?php echo base_url('/dashboard/import'); ?>"><i class="fa fa-upload"></i> 导入数据</a>

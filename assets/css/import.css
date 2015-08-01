@@ -1,0 +1,14 @@
+div#content ul.nav-tabs {
+	margin: 0;
+}
+
+div#content ul.nav-tabs a {
+	text-decoration: none;
+}
+
+div#content div.tab-content {
+	background: #fff;
+	border: 1px solid #ddd;
+	border-top: none;
+	padding: 20px;
+}
