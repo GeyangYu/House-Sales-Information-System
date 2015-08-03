@@ -92,9 +92,154 @@ class Dashboard extends CI_Controller {
      * @return 包含数据导入结果的JSON数据
      */
     public function import_data() {
-        $records = json_decode($this->input->post('records'));
+        $city               = $this->input->post('city');
+        $records            = json_decode($this->input->post('records'));
 
-        var_dump($records);
+        $total_projects     = $this->import_projects($city, $records);
+        $total_buildings    = $this->import_buildings($city, $records);
+        $total_records      = $this->import_records($city, $records);
+
+        $result             = array(
+            'isSuccessful'      => true,
+            'totalProjects'     => $total_projects,
+            'totalBuildings'    => $total_buildings,
+            'totalRecords'      => $total_records,
+        );
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
+    }
+
+    /**
+     * 导入项目.
+     * @param  String $city    - 项目所在城市
+     * @param  Array  $records - 成交记录列表
+     * @return 导入的项目数量
+     */
+    public function import_projects($city, $records) {
+        $total_projects     = 0;
+        $projects           = $this->get_project_list($city);
+
+        foreach ( $records as $record ) {
+            $project_name       = $record->projectName;
+            $project_type       = $record->projectType;
+            $project_address    = $record->projectAddress;
+            $project_city       = $city;
+
+            if ( !in_array( $project_name, $projects ) ) {
+                $this->Project_model->create_project($project_name, $project_type, $project_address, $project_city);
+
+                array_push($projects, $project_name);
+                ++ $total_projects;
+            }
+        }
+        return $total_projects;
+    }
+
+    /**
+     * 获取某个城市的项目列表.
+     * @param  String $city - 项目所在的城市
+     * @return 该城市项目列表
+     */
+    private function get_project_list($city) {
+        $result_set  = $this->Project_model->get_projects_using_city($city);
+        $projects    = array();
+        
+        foreach ( $result_set as $row_set ) {
+            array_push($projects, $row_set['project_name']);
+        }
+        return $projects;
+    }
+
+    /**
+     * 导入建筑记录.
+     * @param  String $city    - 项目所在城市
+     * @param  Array  $records - 成交记录列表
+     * @return 导入的建筑的数量
+     */
+    private function import_buildings($city, $records) {
+        $total_buildings    = 0;
+        $projects           = $this->get_project_map($city);
+        $buildings          = $this->get_buildings_list($city);
+
+        foreach ( $records as $record ) {
+            $project_name       = $record->projectName;
+            $project_id         = $projects[$project_name];
+            $building_id        = $record->buildingId;
+            $building_structure = $record->buildingStructure;
+            $building_height    = $record->buildingHeight;
+
+            if ( !in_array( $project_id.'-'.$building_id, $buildings ) ) {
+                $this->Building_model->create_buildings($project_id, $building_id, $building_structure, $building_height);
+
+                array_push($buildings, $project_id.'-'.$building_id);
+                ++ $total_buildings;
+            }
+        }
+        return $total_buildings;
+    }
+
+    /**
+     * 获取建筑的列表.
+     * @param  String $city - 建筑所在的城市
+     * @return 建筑的列表
+     */
+    private function get_buildings_list($city) {
+        $result_set  = $this->Building_model->get_buildings_using_city($city);
+        $buildings   = array();
+        
+        foreach ( $result_set as $row_set ) {
+            $project_id     = $row_set['project_id'];
+            $building_id    = $row_set['building_id'];
+
+            array_push($buildings, $project_id.'-'.$building_id);
+        }
+        return $buildings;
+    }
+
+    /**
+     * 导入成交记录.
+     * @param  String $city    - 项目所在城市
+     * @param  Array  $records - 成交记录列表
+     * @return 导入成交记录的数量
+     */
+    private function import_records($city, $records) {
+        $total_records  = 0;
+        $projects       = $this->get_project_map($city);
+
+        foreach ( $records as $record ) {
+            $project_name   = $record->projectName;
+            $project_id     = $projects[$project_name];
+            $building_id    = $record->buildingId;
+            $record_floor   = $record->recordFloor;
+            $record_price   = $record->recordPrice;
+            $record_area    = $record->recordArea;
+            $record_time    = $record->recordTime;
+
+            $this->Record_model->create_record($project_id, $building_id, $record_floor, $record_price, $record_area, $record_time);
+            ++ $total_records;
+        }
+        return $total_records;
+    }
+
+    /**
+     * 获取某个城市项目的键值对列表.
+     * 其中Key为项目名称, Value为项目的ID.
+     * @param  String $city - 城市名称
+     * @return 项目的键值对列表
+     */
+    private function get_project_map($city) {
+        $result_set = $this->Project_model->get_projects_using_city($city);
+        $projects   = array();
+
+        foreach ( $result_set as $row_set ) {
+            $project_id     = $row_set['project_id'];
+            $project_name   = $row_set['project_name'];
+
+            $projects[$project_name] = $project_id;
+        }
+        return $projects;
     }
 
     /**

@@ -165,9 +165,9 @@ class Record_model extends CI_Model {
     
     /**
      * [get_sold_suit description]
-     * @param  [type] $city       [description]
+     * @param  [type] $city              [description]
      * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound [description]
+     * @param  [type] $time_upper_bound  [description]
      * @return [type]             [description]
      */
     public function get_sold_suit($city, $time_lower_bound, $time_upper_bound, $group_by) {
@@ -183,9 +183,9 @@ class Record_model extends CI_Model {
     
     /**
      * [get_sold_price description]
-     * @param  [type] $city       [description]
+     * @param  [type] $city              [description]
      * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound [description]
+     * @param  [type] $time_upper_bound  [description]
      * @return [type]             [description]
      */
     public function get_sold_price($city, $time_lower_bound, $time_upper_bound, $group_by) {
@@ -201,9 +201,9 @@ class Record_model extends CI_Model {
     
     /**
      * [get_sold_area description]
-     * @param  [type] $city       [description]
+     * @param  [type] $city              [description]
      * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound [description]
+     * @param  [type] $time_upper_bound  [description]
      * @return [type]             [description]
      */
     public function get_sold_area($city, $time_lower_bound, $time_upper_bound, $group_by) {
@@ -218,10 +218,10 @@ class Record_model extends CI_Model {
     }
     
     /**
-     * [get_average_price description]
-     * @param  [type] $city       [description]
-     * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound [description]
+     * 获取某个时间段内房屋的平均价格.
+     * @param  String $city             - 项目所在城市
+     * @param  Date   $time_lower_bound - 分析起始时间
+     * @param  Date   $time_upper_bound - 分析截止时间
      * @return [type]             [description]
      */
     public function get_average_price($city, $time_lower_bound, $time_upper_bound, $group_by) {
@@ -236,10 +236,10 @@ class Record_model extends CI_Model {
     }
     
     /**
-     * [get_rest_suit description]
-     * @param  [type] $city       [description]
-     * @param  [type] $time_upper_bound [description]
-     * @return [type]             [description]
+     * 获取截止到某个时间的库存房源.
+     * @param  String $city             - 项目所在城市
+     * @param  Date   $time_upper_bound - 截止时间
+     * @return 该城市中截止到指定时间所有剩余房源的列表
      */
     public function get_rest_suit($city, $time_upper_bound) {
         $sql        = 'SELECT b2.project_id, b2.building_id, b2.project_total_suit - ('.
@@ -256,11 +256,24 @@ class Record_model extends CI_Model {
         return $result_set->result_array();  
     }
 
-    public $record_id;
-    public $project_id;
-    public $building_id;
-    public $record_floor;
-    public $record_price;
-    public $record_area;
-    public $record_time;
+    /**
+     * 创建成交记录.
+     * @param  int   $project_id   - 项目ID
+     * @param  int   $building_id  - 幢号
+     * @param  int   $record_floor - 所在层数
+     * @param  float $record_price - 成交总价
+     * @param  float $record_area  - 建筑面积
+     * @param  Date  $record_time  - 成交时间
+     */
+    public function create_record($project_id, $building_id, $record_floor, $record_price, $record_area, $record_time) {
+        $record     = array(
+            'project_id'    => $project_id,
+            'building_id'   => $building_id,
+            'record_floor'  => $record_floor,
+            'record_price'  => $record_price,
+            'record_area'   => $record_price,
+            'record_time'   => $record_time,
+        );
+        return $this->db->insert('house_record', $record);
+    }
 }

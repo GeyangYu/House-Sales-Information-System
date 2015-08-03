@@ -56,6 +56,11 @@
                     </div> <!-- #upload -->
                     <div class="tab-pane fade in" id="preview">
                         <div class="row-fluid">
+                            <div class="span12">
+                                <div class="alert alert-success hide"></div> <!-- .alert-error -->
+                            </div> <!-- .span12 -->
+                        </div> <!-- .row-fluid -->
+                        <div class="row-fluid">
                             <div class="span6">
                                 <select id="cities">
                                     <option value="">请选择地区</option>
@@ -193,6 +198,10 @@
                 alert('请选择导入数据所在的城市.');
                 return;
             }
+
+            $('#import-button').attr('disabled', 'disabled');
+            $('#import-button').html('请稍后...');
+
             $('tr', 'table tbody').each(function() {
                 var isChecked           = $('label.checkbox', $(this)).hasClass('checked'),
                     projectType         = $('.project-type', $(this)).html() == '新建商品住宅' ? '1' : '0',
@@ -209,7 +218,6 @@
                 if ( isChecked ) {
                     records.push({
                         'projectType': projectType,
-                        'projectCity': projectCity,
                         'projectName': projectName,
                         'projectAddress': projectAddress,
                         'buildingId': buildingId,
@@ -223,12 +231,13 @@
                 }
             });
 
-            return doImportAction(records);
+            return doImportAction(projectCity, records);
         });
     </script>
     <script type="text/javascript">
-        function doImportAction(records) {
+        function doImportAction(city, records) {
             var postData = {
+                'city': city,
                 'records': JSON.stringify(records)
             }
 
@@ -238,7 +247,21 @@
                 data: postData,
                 dataType: 'JSON',
                 success: function(result){
-                    console.log(result);
+                    if ( result['isSuccessful'] ) {
+                        $('.alert-success').html("成功导入记录%s条.<br> 其中创建了%s条项目记录, %s条建筑记录"
+                            .format(result['totalRecords'], result['totalProjects'], result['totalBuildings']));
+                        $('.alert-success').removeClass('hide');
+                    }
+
+                    $('tr', 'table tbody').each(function() {
+                        var isChecked           = $('label.checkbox', $(this)).hasClass('checked');
+                        if ( isChecked ) {
+                            $(this).remove();
+                        }
+                    });
+
+                    $('#import-button').removeAttr('disabled');
+                    $('#import-button').html('导入数据');
                 }
             });
         }
