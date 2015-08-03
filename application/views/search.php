@@ -155,83 +155,83 @@
                     <div class="body hide">
                         <div class="row-fluid">
                             <div class="span3">
-                                <label class="checkbox" for="time">
+                                <label class="checkbox" for="column-time">
                                     <input id="column-time" type="checkbox" data-toggle="checkbox" checked> 交易时间
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="district">
+                                <label class="checkbox" for="column-district">
                                     <input id="column-district" type="checkbox" data-toggle="checkbox" checked> 行政区划
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="block">
+                                <label class="checkbox" for="column-block">
                                     <input id="column-block" type="checkbox" data-toggle="checkbox" checked> 板块名称
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="project-name">
+                                <label class="checkbox" for="column-project-name">
                                     <input id="column-project-name" type="checkbox" data-toggle="checkbox" checked> 项目名称
                                 </label>
                             </div> <!-- .span3 -->
                         </div> <!-- .row-fluid -->
                         <div class="row-fluid">
                             <div class="span3">
-                                <label class="checkbox" for="function">
+                                <label class="checkbox" for="column-function">
                                     <input id="column-function" type="checkbox" data-toggle="checkbox" checked> 功能区块
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="building">
+                                <label class="checkbox" for="column-building">
                                     <input id="column-building" type="checkbox" data-toggle="checkbox" checked> 幢号
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="project-type">
+                                <label class="checkbox" for="column-project-type">
                                     <input id="column-project-type" type="checkbox" data-toggle="checkbox" checked> 项目类型
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="height-type">
+                                <label class="checkbox" for="column-height-type">
                                     <input id="column-height-type" type="checkbox" data-toggle="checkbox" checked> 房屋类型
                                 </label>
                             </div> <!-- .span3 -->
                         </div> <!-- .row-fluid -->
                         <div class="row-fluid">
                             <div class="span3">
-                                <label class="checkbox" for="area-type">
+                                <label class="checkbox" for="column-area-type">
                                     <input id="column-area-type" type="checkbox" data-toggle="checkbox" checked> 房屋面积类型
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="sold-suit">
+                                <label class="checkbox" for="column-sold-suit">
                                     <input id="column-sold-suit" type="checkbox" data-toggle="checkbox" checked> 销售套数
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="sold-price">
+                                <label class="checkbox" for="column-sold-price">
                                     <input id="column-sold-price" type="checkbox" data-toggle="checkbox" checked> 成交总价汇总
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="project-area">
+                                <label class="checkbox" for="column-project-area">
                                     <input id="column-project-area" type="checkbox" data-toggle="checkbox" checked> 建筑面积总和
                                 </label>
                             </div> <!-- .span3 -->
                         </div> <!-- .row-fluid -->
                         <div class="row-fluid">
                             <div class="span3">
-                                <label class="checkbox" for="average-price">
+                                <label class="checkbox" for="column-average-price">
                                     <input id="column-average-price" type="checkbox" data-toggle="checkbox" checked> 均价
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="number">
+                                <label class="checkbox" for="column-number">
                                     <input id="column-number" type="checkbox" data-toggle="checkbox" checked> 预售证号
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="rest-suit">
+                                <label class="checkbox" for="column-rest-suit">
                                     <input id="column-rest-suit" type="checkbox" data-toggle="checkbox" checked> 截止该月库存房源
                                 </label>
                             </div> <!-- .span3 -->

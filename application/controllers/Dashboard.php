@@ -38,28 +38,30 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * 处理导入数据的请求.
-     * @return 包含数据导入结果的JSON数据
+     * 处理上传和预览数据的请求.
+     * @return 包含上传数据结果的JSON数据
      */
-    public function import_data() {
+    public function preview_data() {
         $upload_result = $this->upload_files();
         $import_result = array(
             'isSuccessful'  => true,
-            'data'          => array(),
+            'data'          => array()
         );
 
         if ( $upload_result['isSuccessful'] ) {
-            // DO SOMETHING
+            $file_path              = $upload_result['message'];
+            $import_result['data']  = $this->get_data_from_excel($file_path);
         }
         $result        = array(
             'isSuccessful'  => $upload_result['isSuccessful'] && $import_result['isSuccessful'],
             'message'       => $upload_result['message'],
             'data'          => $import_result['data'],
         );
+
         return $this->output
             ->set_content_type('application/json')
             ->set_status_header(200)
-            ->set_output(json_encode($upload_result));
+            ->set_output(json_encode($result));
     }
 
     /**
@@ -73,6 +75,26 @@ class Dashboard extends CI_Controller {
         $this->load->library('lib_upload', $config);
 
         return $this->lib_upload->do_upload();
+    }
+
+    /**
+     * 从Excel读取文件内容.
+     * @param  String $file_path - Excel文件路径
+     * @return Excel的文件内容, 以数组的形式返回
+     */
+    private function get_data_from_excel($file_path) {
+        $this->load->library('lib_excel');
+        return $this->lib_excel->get_data_from_excel($file_path);
+    }
+
+    /**
+     * 处理导入数据的请求.
+     * @return 包含数据导入结果的JSON数据
+     */
+    public function import_data() {
+        $records = json_decode($this->input->post('records'));
+
+        var_dump($records);
     }
 
     /**

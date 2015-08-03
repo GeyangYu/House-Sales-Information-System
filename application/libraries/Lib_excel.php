@@ -26,10 +26,10 @@ class Lib_excel extends PHPExcel {
             $reader = PHPExcel_IOFactory::createReader( 'Excel2007' );
         }
         
-        $obj = $reader->load($file_path);
-        $sheet = $obj->getSheet(0); 
-        $number_of_rows = $sheet->getHighestRow();
-        $number_of_columns = PHPExcel_Cell::columnIndexFromString($sheet->getHighestColumn());
+        $obj                = $reader->load($file_path);
+        $sheet              = $obj->getSheet(0); 
+        $number_of_rows     = $sheet->getHighestRow();
+        $number_of_columns  = PHPExcel_Cell::columnIndexFromString($sheet->getHighestColumn());
         $data = array();
         for ( $row = 1; $row <= $number_of_rows; ++ $row ) {
         	for ( $column = 0; $column < $number_of_columns; ++ $column ) {

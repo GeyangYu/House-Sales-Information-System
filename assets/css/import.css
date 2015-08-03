@@ -12,3 +12,22 @@ div#content div.tab-content {
 	border-top: none;
 	padding: 20px;
 }
+
+div#content div#preview table.table thead {
+	background-color: #16a085;
+	color: #fff;
+}
+
+div#content div#preview table.table label.checkbox {
+	margin: 0;
+}
+
+div#content div#preview table.table thead th label.checkbox.checked span.icons {
+	color: #fff;
+}
+
+div#content div#preview table.table thead th,
+div#content div#preview table.table tbody td {
+	text-align: center;
+	vertical-align: middle;
+}
