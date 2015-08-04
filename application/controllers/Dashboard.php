@@ -301,6 +301,54 @@ class Dashboard extends CI_Controller {
     }
 
     /**
+     * 处理用户更新项目信息的请求.
+     * @return 项目信息的更新结果
+     */
+    public function update_projects() {
+        $isSuccessful   = false;
+        $projects       = json_decode($this->input->post('projects'));
+
+        if ( is_array($projects) ) {
+            foreach ( $projects as $project ) {
+                
+            }
+            $isSuccessful   = true;
+        }
+
+        $result = array(
+            'isSuccessful'  => $isSuccessful,
+        );
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
+    }
+
+    /**
+     * 处理用户更新建筑信息的请求.
+     * @return 项目信息的更新结果
+     */
+    public function update_buildings() {
+        $isSuccessful   = false;
+        $buildings      = json_decode($this->input->post('buildings'));
+
+        if ( is_array($buildings) ) {
+            foreach ( $buildings as $building ) {
+                
+            }
+            $isSuccessful   = true;
+        }
+
+        $result = array(
+            'isSuccessful'  => $isSuccessful,
+        );
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
+    }
+
+    /**
      * 加载数据搜索页面.
      */
     public function search() {

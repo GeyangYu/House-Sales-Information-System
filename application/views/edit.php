@@ -50,6 +50,8 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade in active" id="projects">
+                        <div class="alert alert-error hide">在更新记录时发生了错误. 请检查数据正确性.</div> <!-- .alert-error -->
+                        <div class="alert alert-success hide">数据更新操作成功完成.</div> <!-- .alert-success -->
                         <div class="row-fluid">
                             <div class="span4">
                                 <select id="project-city">
@@ -70,28 +72,32 @@
                             </div> <!-- .span4 -->
                         </div> <!-- row-fluid -->
                         <div class="row-fluid">
-                            <div class="alert alert-error">暂无符合条件的记录.</div>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="project-id hide">项目ID</th>
-                                        <th class="project-name">项目名称</th>
-                                        <th class="project-type">项目类型</th>
-                                        <th class="project-address">项目地址</th>
-                                        <th class="project-city">所在城市</th>
-                                        <th class="project-district">行政区划</th>
-                                        <th class="project-block">板块名称</th>
-                                        <th class="project-function">功能区块</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <div id="project-pagination" class="pagination pagination-centered">
-                                <ul></ul>
-                            </div> <!-- #pagination-->
-                        </div> <!-- row-fluid -->
+                            <div class="span12">
+                                <div class="alert alert-info">暂无符合条件的记录.</div> <!-- .alert-info -->
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="project-id hide">项目ID</th>
+                                            <th class="project-name">项目名称</th>
+                                            <th class="project-type">项目类型</th>
+                                            <th class="project-address">项目地址</th>
+                                            <th class="project-city">所在城市</th>
+                                            <th class="project-district">行政区划</th>
+                                            <th class="project-block">板块名称</th>
+                                            <th class="project-function">功能区块</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="project-pagination" class="pagination pagination-centered">
+                                    <ul></ul>
+                                </div> <!-- #pagination-->
+                            </div> <!-- .span12 -->
+                        </div> <!-- .row-fluid -->
                     </div> <!-- #projects -->
                     <div class="tab-pane fade in" id="buildings">
+                        <div class="alert alert-error hide">在更新记录时发生了错误. 请检查数据正确性.</div> <!-- .alert-error -->
+                        <div class="alert alert-success hide">数据更新操作成功完成.</div> <!-- .alert-success -->
                         <div class="row-fluid">
                             <div class="span4">
                                 <select id="building-city">
@@ -112,26 +118,28 @@
                             </div> <!-- .span4 -->
                         </div> <!-- row-fluid -->
                         <div class="row-fluid">
-                            <div class="alert alert-error">暂无符合条件的记录.</div>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="project-id hide">项目ID</th>
-                                        <th class="project-name">项目名称</th>
-                                        <th class="building-id">幢号</th>
-                                        <th class="building-structure">房屋结构</th>
-                                        <th class="building-height">总层数</th>
-                                        <th class="project-number">预售证号</th>
-                                        <th class="project-area">总可售面积</th>
-                                        <th class="project-total-suit">总可售套数</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <div id="building-pagination" class="pagination pagination-centered">
-                                <ul></ul>
-                            </div> <!-- #pagination-->
-                        </div> <!-- row-fluid -->
+                            <div class="span12">
+                                <div class="alert alert-info">暂无符合条件的记录.</div> <!-- .alert-info -->
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="project-id hide">项目ID</th>
+                                            <th class="project-name">项目名称</th>
+                                            <th class="building-id">幢号</th>
+                                            <th class="building-structure">房屋结构</th>
+                                            <th class="building-height">总层数</th>
+                                            <th class="project-number">预售证号</th>
+                                            <th class="project-area">总可售面积</th>
+                                            <th class="project-total-suit">总可售套数</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="building-pagination" class="pagination pagination-centered">
+                                    <ul></ul>
+                                </div> <!-- #pagination-->
+                            </div> <!-- .span12 -->
+                        </div> <!-- .row-fluid -->
                     </div> <!-- #buildings -->
             </div> <!-- #content -->
         </div> <!-- #container -->
@@ -226,13 +234,13 @@
                 displayProjectRecords(result['projects']);
                 displayPagination($('div#project-pagination'), result['totalPages'], pageNumber);
 
-                $('.alert-error', '#projects').addClass('hide');
+                $('.alert-info', '#projects').addClass('hide');
                 $('.table', '#projects').removeClass('hide');
                 $('div#project-pagination').removeClass('hide');
             } else {
                 $('.table', '#projects').addClass('hide');
                 $('div#project-pagination').addClass('hide');
-                $('.alert-error', '#projects').removeClass('hide');
+                $('.alert-info', '#projects').removeClass('hide');
             }
         }
     </script>
@@ -286,9 +294,8 @@
                                   '        </div>' +
                                   '    </td>' +
                                   '</tr>';
-            
-            return projectTemplate.format(record['project_id'], record['project_name'], 
-                    record['project_address'], record['project_city'], record['project_district'], record['project_block'], record['project_function']);
+            return projectTemplate.format(record['project_id'], record['project_name'], record['project_address'], 
+                    record['project_city'], record['project_district'], record['project_block'], record['project_function']);
         }
     </script>
     <script type="text/javascript">
@@ -357,13 +364,13 @@
                 displayBuildingRecords(result['buildings']);
                 displayPagination($('div#building-pagination'), result['totalPages'], pageNumber);
 
-                $('.alert-error', '#buildings').addClass('hide');
+                $('.alert-info', '#buildings').addClass('hide');
                 $('.table', '#buildings').removeClass('hide');
                 $('div#building-pagination').removeClass('hide');
             } else {
                 $('.table', '#buildings').addClass('hide');
                 $('div#building-pagination').addClass('hide');
-                $('.alert-error', '#buildings').removeClass('hide');
+                $('.alert-info', '#buildings').removeClass('hide');
             }
         }
     </script>
@@ -389,7 +396,7 @@
                                    '    </td>' +
                                    '    <td class="building-height">' +
                                    '        <div class="control-group">' +
-                                   '            <input class="span12" type="text" value="%s" />' +
+                                   '            <input class="span12" type="number" step="any" value="%s" />' +
                                    '        </div>' +
                                    '    </td>' +
                                    '    <td class="project-number">' +
@@ -399,18 +406,129 @@
                                    '    </td>' +
                                    '    <td class="project-area">' +
                                    '        <div class="control-group">' +
-                                   '            <input class="span12" type="text" value="%s" />' +
+                                   '            <input class="span12" type="number" step="any" value="%s" />' +
                                    '        </div>' +
                                    '    </td>' +
                                    '    <td class="project-total-suit">' +
                                    '        <div class="control-group">' +
-                                   '            <input class="span12" type="text" value="%s" />' +
+                                   '            <input class="span12" type="number" value="%s" />' +
                                    '        </div>' +
                                    '    </td>' +
                                    '</tr>';
-
             return buildingTemplate.format(record['project_id'], record['project_name'], record['building_id'], record['building_structure'], 
                     record['building_height'], record['project_number'], record['project_area'], record['project_total_suit']);
+        }
+    </script>
+    <script type="text/javascript">
+        $('.btn-info', '#projects').click(function() {
+            var projects = [];
+
+            $('tr', '#projects table tbody').each(function() {
+                var projectId       = $('.project-id', $(this)).html(),
+                    projectName     = $('input', $('.project-name', $(this))).val(),
+                    projectType     = $('select', $('.project-type', $(this))).val(),
+                    projectAddress  = $('input', $('.project-address', $(this))).val(),
+                    projectCity     = $('input', $('.project-city', $(this))).val(),
+                    projectDistrict = $('input', $('.project-district', $(this))).val(),
+                    projectBlock    = $('input', $('.project-block', $(this))).val(),
+                    projectFunction = $('input', $('.project-function', $(this))).val();
+
+                projects.push({
+                    'projectId': projectId,
+                    'projectName': projectName,
+                    'projectType': projectType,
+                    'projectAddress': projectAddress,
+                    'projectCity': projectCity,
+                    'projectDistrict': projectDistrict,
+                    'projectBlock': projectBlock,
+                    'projectFunction': projectFunction
+                });
+            });
+
+            $('.btn-info', '#projects').attr('disabled', 'disabled');
+            $('.btn-info', '#projects').html('请稍后...');
+
+            return updateProjects(projects);
+        });
+    </script>
+    <script type="text/javascript">
+        function updateProjects(projects) {
+            var postData = {
+                'projects': JSON.stringify(projects)
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo base_url('/dashboard/update-projects'); ?>',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result){
+                    if ( result['isSuccessful'] ) {
+                        $('.alert-error', '#projects').addClass('hide');
+                        $('.alert-success', '#projects').removeClass('hide');
+                    } else {
+                        $('.alert-success', '#projects').addClass('hide');
+                        $('.alert-error', '#projects').removeClass('hide');
+                    }
+                    $('.btn-info', '#projects').removeAttr('disabled');
+                    $('.btn-info', '#projects').html('更新数据');
+                }
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        $('.btn-info', '#buildings').click(function() {
+            var buildings = [];
+
+            $('tr', '#buildings table tbody').each(function() {
+                var projectId           = $('.project-id', $(this)).html(),
+                    buildingId          = $('.building-id', $(this)).html(),
+                    buildingStructure   = $('input', $('.building-structure', $(this))).val(),
+                    buildingHeight      = $('input', $('.building-height', $(this))).val(),
+                    projectNumber       = $('input', $('.project-number', $(this))).val(),
+                    projectArea         = $('input', $('.project-area', $(this))).val(),
+                    projectTotalSuit    = $('input', $('.project-total-suit', $(this))).val();
+
+                buildings.push({
+                    'projectId': projectId,
+                    'buildingId': buildingId,
+                    'buildingStructure': buildingStructure,
+                    'buildingHeight': buildingHeight,
+                    'projectNumber': projectNumber,
+                    'projectArea': projectArea,
+                    'projectTotalSuit': projectTotalSuit
+                });
+            });
+            
+            $('.btn-info', '#buildings').attr('disabled', 'disabled');
+            $('.btn-info', '#buildings').html('请稍后...');
+
+            return updateBuildings(buildings);
+        });
+    </script>
+    <script type="text/javascript">
+        function updateBuildings(buildings) {
+            var postData = {
+                'buildings': JSON.stringify(buildings)
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo base_url('/dashboard/update-buildings'); ?>',
+                data: postData,
+                dataType: 'JSON',
+                success: function(result){
+                    if ( result['isSuccessful'] ) {
+                        $('.alert-error', '#buildings').addClass('hide');
+                        $('.alert-success', '#buildings').removeClass('hide');
+                    } else {
+                        $('.alert-success', '#buildings').addClass('hide');
+                        $('.alert-error', '#buildings').removeClass('hide');
+                    }
+                    $('.btn-info', '#buildings').removeAttr('disabled');
+                    $('.btn-info', '#buildings').html('更新数据');
+                }
+            });
         }
     </script>
 </body>
