@@ -18,7 +18,7 @@ class Record_model extends CI_Model {
     }
 
     /**
-     * [get_number_of_records description]
+     * 获取在某些筛选条件下成交记录的数量.
      * @param  [type] $city               - 城市
      * @param  [type] $time_lower_bound   - 起始时间(YYYY-mm-dd)
      * @param  [type] $time_upper_bound   - 结束时间(YYYY-mm-dd)
@@ -33,7 +33,7 @@ class Record_model extends CI_Model {
      * @param  [type] $area_lower_bound   - 房屋面积的下界
      * @param  [type] $area_upper_bound   - 房屋面积的上界
      * @param  [type] $number             - 预售证号
-     * @return [type]                     [description]
+     * @return 在某些筛选条件下成交记录的数量
      */
     public function get_number_of_records($city, $time_lower_bound, $time_upper_bound, 
         $district, $block, $project_name, $function, $building, $project_type, 

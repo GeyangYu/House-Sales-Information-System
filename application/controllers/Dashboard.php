@@ -251,6 +251,56 @@ class Dashboard extends CI_Controller {
     }
 
     /**
+     * 获取项目信息.
+     * @return 一个包含项目信息的数组
+     */
+    public function get_projects() {
+        $project_city       = $this->input->get('city');
+        $display_null_only  = $this->input->get('displayNullOnly');
+        $page_number        = $this->input->get('page');
+        $limit              = 25;
+        $offset             = $page_number <= 1 ? 0 : ($page_number - 1) * $limit;
+
+        $number_of_projects = $this->Project_model->get_number_of_projects($project_city, $display_null_only);
+        $projects           = $this->Project_model->get_projects_using_city_and_offset($project_city, $display_null_only, $offset, $limit);
+        $result             = array(
+            'isSuccessful'  => count($projects) > 0,
+            'projects'      => $projects,
+            'totalPages'    => ceil($number_of_projects / $limit),
+        );
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
+    }
+
+    /**
+     * 获取建筑信息.
+     * @return 一个包含建筑信息的数组
+     */
+    public function get_buildings() {
+        $project_city       = $this->input->get('city');
+        $display_null_only  = $this->input->get('displayNullOnly');
+        $page_number        = $this->input->get('page');
+        $limit              = 25;
+        $offset             = $page_number <= 1 ? 0 : ($page_number - 1) * $limit;
+
+        $number_of_buildings= $this->Building_model->get_number_of_buildings($project_city, $display_null_only);
+        $buildings          = $this->Building_model->get_buildings_using_city_and_offset($project_city, $display_null_only, $offset, $limit);
+        $result             = array(
+            'isSuccessful'  => count($buildings) > 0,
+            'buildings'     => $buildings,
+            'totalPages'    => ceil($number_of_buildings / $limit),
+        );
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
+    }
+
+    /**
      * 加载数据搜索页面.
      */
     public function search() {
@@ -378,13 +428,13 @@ class Dashboard extends CI_Controller {
 
     /**
      * 根据筛选条件获取指定的数据记录集.
-     * @param  [type] $project_city               [description]
+     * @param  [type] $project_city       [description]
      * @param  [type] $time_lower_bound   [description]
      * @param  [type] $time_upper_bound   [description]
-     * @param  [type] $project_district           [description]
-     * @param  [type] $project_block              [description]
+     * @param  [type] $project_district   [description]
+     * @param  [type] $project_block      [description]
      * @param  [type] $project_name       [description]
-     * @param  [type] $project_function           [description]
+     * @param  [type] $project_function   [description]
      * @param  [type] $building           [description]
      * @param  [type] $project_type       [description]
      * @param  [type] $height_lower_bound [description]
