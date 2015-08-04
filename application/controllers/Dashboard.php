@@ -22,7 +22,6 @@ class Dashboard extends CI_Controller {
      */
     public function index() {
         $data = array(
-
         );
         $this->load->view('index', $data);
     }
@@ -31,10 +30,7 @@ class Dashboard extends CI_Controller {
      * Render to the import page.
      */
     public function import() {
-        $data = array(
-
-        );
-        $this->load->view('import', $data);
+        $this->load->view('import');
     }
 
     /**
@@ -246,8 +242,10 @@ class Dashboard extends CI_Controller {
      * Render to the edit page.
      */
     public function edit() {
-        $data = array(
+        $cities         = $this->Project_model->get_cities();
 
+        $data = array(
+            'cities'    => $cities,
         );
         $this->load->view('edit', $data);
     }

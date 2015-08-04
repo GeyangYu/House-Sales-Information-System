@@ -1,0 +1,34 @@
+div#content ul.nav-tabs {
+	margin: 0;
+}
+
+div#content ul.nav-tabs a {
+	text-decoration: none;
+}
+
+div#content div.tab-content {
+	background: #fff;
+	border: 1px solid #ddd;
+	border-top: none;
+	padding: 20px;
+}
+
+div#content div.tab-content label[for=project-display-null-only], 
+div#content div.tab-content label[for=building-display-null-only] {
+	margin-top: 10px;
+}
+
+div#content table.table thead {
+	background-color: #16a085;
+	color: #fff;
+}
+
+div#content table.table label.checkbox {
+	margin: 0;
+}
+
+div#content table.table thead th,
+div#content table.table tbody td {
+	text-align: center;
+	vertical-align: middle;
+}

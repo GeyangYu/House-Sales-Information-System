@@ -32,6 +32,25 @@ class Project_model extends CI_Model {
     }
 
     /**
+     * 通过城市获取项目列表, 并分页.
+     * @param  String  $project_city      - 项目所在城市(可为空)
+     * @param  boolean $display_null_only - 是否至显示包含NULL字段的记录
+     * @param  int     $offset            - 记录起始游标
+     * @param  int     $limit             - 最大记录数量
+     * @return 一个包含项目列表的数组
+     */
+    public function get_projects_using_city_and_offset($project_city, $display_null_only, $offset, $limit) {
+        $parameters = array();
+
+        $sql        = 'SELECT * FROM house_project';
+        
+
+        $result_set = $this->db->query($sql, $parameters);
+
+        return $result_set->result_array();
+    }
+
+    /**
      * 创建项目.
      * @param  String $project_name    - 项目名称
      * @param  int    $project_type    - 项目类型(0或1)
