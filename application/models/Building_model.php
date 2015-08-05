@@ -81,8 +81,25 @@ class Building_model extends CI_Model {
             'project_id'            => $project_id,
             'building_id'           => $building_id,
             'building_structure'    => $building_structure,
-            'building_height'       => $building_height
+            'building_height'       => $building_height,
         );
         return $this->db->insert('house_building', $building);
+    }
+    
+    public function update_building($project_id, $building_id, $building_structure, $building_height,
+        $project_number, $project_area, $project_total_suit) {
+        $building   = array(
+            'project_id'            => $project_id,
+            'building_id'           => $building_id,
+            'building_structure'    => $building_structure,
+            'building_height'       => $building_height,
+            'project_number'        => $project_number, 
+            'project_area'          => $project_area, 
+            'project_total_suit'    => $project_total_suit,
+            
+        );
+        $this->db->where('project_id', $project_id);
+        $this->db->where('building_id', $building_id);
+        return $this->db->update('house_building', $building);
     }
 }

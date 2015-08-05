@@ -238,6 +238,11 @@
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
+                                <label class="checkbox" for="column-rest-area">
+                                    <input id="column-rest-area" type="checkbox" data-toggle="checkbox" checked> 总可售面积
+                                </label>
+                            </div> <!-- .span3 -->
+                            <div class="span3">
                                 <label class="checkbox" for="column-rest-suit">
                                     <input id="column-rest-suit" type="checkbox" data-toggle="checkbox" checked> 截止该月库存房源
                                 </label>
@@ -295,6 +300,7 @@
                                 <th class="project-area">建筑面积总和</th>
                                 <th class="average-price">均价</th>
                                 <th class="number">预售证号</th>
+                                <th class="rest-area">总可售面积</th>
                                 <th class="rest-suit">截止该月库存房源</th>
                             </tr>
                         </thead>
@@ -464,6 +470,7 @@
                                  '    <td class="project-area %s">%s</td>' +
                                  '    <td class="average-price %s">%s</td>' +
                                  '    <td class="number %s">%s</td>' +
+                                 '    <td class="rest-area %s">%s</td>' +
                                  '    <td class="rest-suit %s">%s</td>' +
                                  '</tr>';
 
@@ -481,7 +488,8 @@
                 isColumnDisplayed('sold-price'), parseInt(record['sold_price']).toFixed(2), 
                 isColumnDisplayed('project-area'), parseInt(record['project_area']).toFixed(2), 
                 isColumnDisplayed('average-price'), parseInt(record['average_price']).toFixed(2), 
-                isColumnDisplayed('number'), record['project_number'], 
+                isColumnDisplayed('number'), record['project_number'],
+                isColumnDisplayed('rest-area'), record['rest_area'], 
                 isColumnDisplayed('rest-suit'), record['rest_suit']);
         }
     </script>
