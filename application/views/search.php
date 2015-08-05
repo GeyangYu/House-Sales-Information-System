@@ -345,16 +345,16 @@
     </script>
     <script type="text/javascript">
         $(function() {
-            getCondictions(1);
+            getCondictions(1, 'getRecords');
         });
 
         $('.btn-primary', '#conditions').click(function() {
-            getCondictions(1);
+            getCondictions(1, 'getRecords');
         });
 
         $('label.radio', '#stats').click(function() {
             setTimeout(function() {
-                getCondictions(1);
+                getCondictions(1, 'getRecords');
             }, 100);
         });
 
@@ -374,14 +374,11 @@
             } else if ( pageNumber === '&gt;' ) {
                 pageNumber  = currentPage + 1;
             }
-            getCondictions(pageNumber);
+            getCondictions(pageNumber, 'getRecords');
         });
     </script>
     <script type="text/javascript">
         function getCondictions(pageNumber, callback) {
-            $('.btn-primary', '#conditions').attr('请稍后...');
-            $('.btn-primary', '#conditions').html('disabled', 'disabled');
-
             var city            = $('#city').val().trim() || null,
                 startTime       = $('#start-time').val().trim() || null,
                 endTime         = $('#end-time').val().trim() || null,
@@ -398,6 +395,9 @@
                 groupBy         = checkedStat != null ? checkedStat.substr(5) : 'project-id';
 
             if ( typeof(callback) == 'undefined' || callback == 'getRecords' ) {
+                $('.btn-primary', '#conditions').attr('disabled', 'disabled');
+                $('.btn-primary', '#conditions').html('请稍后...');
+
                 return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
             } else {
                 return exportResult(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, groupBy);

@@ -525,8 +525,8 @@ class Dashboard extends CI_Controller {
             array_push($export_records, array(
                 $record['record_time'], $record['project_city'], $record['project_district'], $record['project_block'], 
                 $record['project_name'], $record['project_function'], $record['building_id'], $project_type, $height_type,
-                $area_type, $record['sold_suit'], $record['sold_price'], $record['project_area'], $record['average_price'],
-                $record['project_number'], $record['rest_area'], $record['rest_suit']
+                $area_type, $record['sold_suit'], $record['sold_price'], $record['sold_area'], $record['average_price'],
+                $record['project_number'], $record['project_area'], $record['rest_suit']
             ));
         }
         return $export_records;
