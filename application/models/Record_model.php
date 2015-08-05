@@ -18,51 +18,11 @@ class Record_model extends CI_Model {
     }
 
     /**
-     * 获取在某些筛选条件下成交记录的数量.
-     * @param  $conditions - 筛选条件
-     * @return 在某些筛选条件下成交记录的数量
-     */
-    public function get_number_of_records($conditions) {
-        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
-        $sql        = 'SELECT * FROM house_record '. 
-                      'NATURAL JOIN house_project '.
-                      'NATURAL JOIN house_building '.
-                      'WHERE project_city = ? '.
-                      'AND record_time >= ? AND record_time <= ?';
-
-        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-
-        $result_set = $this->db->query($sql, $parameters);
-        return $result_set->num_rows();
-    }
-    
-    /**
-     * Get records using several conditions.
-     * @param  $conditions - 筛选条件
-     * @return 符合筛选结果的记录
-     */
-    public function get_records($conditions) {
-        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
-        $sql        = 'SELECT * FROM house_record '. 
-                      'NATURAL JOIN house_project '.
-                      'NATURAL JOIN house_building '.
-                      'WHERE project_city = ? '.
-                      'AND record_time >= ? AND record_time <= ?';
-
-        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-        $sql       .= ' ORDER BY record_time LIMIT ?, ?';
-        array_push($parameters, $conditions['offset'], $conditions['limit']);
-        
-        $result_set = $this->db->query($sql, $parameters);
-        return $result_set->result_array();
-    }
-
-    /**
-     * [get_query_sql description]
+     * 根据筛选条件生成SQL查询语句.
      * @param  String $base_sql   - SQL 查询语句的模板
      * @param  Array  $parameters - SQL 查询的参数列表
      * @param  Array  $conditions - 筛选条件
-     * @return [type]                     [description]
+     * @return SQL查询语句
      */
     private function get_query_sql($base_sql, &$parameters, $conditions) {
         if ( $conditions['project_district'] != NULL ) {
@@ -113,6 +73,46 @@ class Record_model extends CI_Model {
     }
 
     /**
+     * 获取在某些筛选条件下成交记录的数量.
+     * @param  $conditions - 筛选条件
+     * @return 在某些筛选条件下成交记录的数量
+     */
+    public function get_number_of_records($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
+        $sql        = 'SELECT * FROM house_record '. 
+                      'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
+                      'WHERE project_city = ? '.
+                      'AND record_time >= ? AND record_time <= ?';
+
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
+
+        $result_set = $this->db->query($sql, $parameters);
+        return $result_set->num_rows();
+    }
+    
+    /**
+     * Get records using several conditions.
+     * @param  $conditions - 筛选条件
+     * @return 符合筛选结果的记录
+     */
+    public function get_records($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
+        $sql        = 'SELECT * FROM house_record '. 
+                      'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
+                      'WHERE project_city = ? '.
+                      'AND record_time >= ? AND record_time <= ?';
+
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
+        $sql       .= ' ORDER BY record_time LIMIT ?, ?';
+        array_push($parameters, $conditions['offset'], $conditions['limit']);
+        
+        $result_set = $this->db->query($sql, $parameters);
+        return $result_set->result_array();
+    }
+
+    /**
      * 获取项目的总可售面积.
      * @param  [type] $conditions [description]
      * @return [type]             [description]
@@ -121,17 +121,20 @@ class Record_model extends CI_Model {
         $parameters = array();
         $group_by   = $conditions['group_by'];
 
-        $sql        = "SELECT SUM(project_area) AS project_area, $group_by ".
-                      "FROM (".
-                      "    SELECT DISTINCT(project_number), project_area, $group_by ".
-                      "    FROM house_project ".
-                      "    NATURAL JOIN house_building ".
-                      ") p ".
+        $sql        = "SELECT c.project_area AS project_area, c.project_id AS project_id, building_id ". ($group_by == 'project_id' ? '' : ", $group_by ") .
+                      "FROM ( ".
+                      "    SELECT SUM(project_area) AS project_area, project_id ".
+                      "    FROM ( ".
+                      "        SELECT DISTINCT(project_number), project_area, project_id ".
+                      "        FROM house_project ".
+                      "        NATURAL JOIN house_building ".
+                      "    ) p ".
+                      "GROUP BY project_id ".
+                      ") c ".
                       "NATURAL JOIN house_project ".
-                      "WHERE 1 ";
-
+                      "INNER JOIN house_building ON house_building.project_id = house_project.project_id ".
+                      "WHERE 1";
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-        $sql       .= 'GROUP BY '. $group_by;
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -147,6 +150,7 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, COUNT(*) AS sold_suit '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ?';
                       
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
@@ -166,6 +170,7 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, SUM(record_price) AS sold_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
                       
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
@@ -185,6 +190,7 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, SUM(record_area) AS sold_area '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
                       
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
@@ -204,6 +210,7 @@ class Record_model extends CI_Model {
         $sql        = 'SELECT *, AVG(record_price) AS average_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
+                      'NATURAL JOIN house_building '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '; 
         
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
