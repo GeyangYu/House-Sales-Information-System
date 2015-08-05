@@ -21,9 +21,9 @@ class Lib_excel extends PHPExcel {
      */
     public function get_data_from_excel($file_path) {
         if ( substr( $file_path, -3 ) == 'xls' ) {
-            $reader = PHPExcel_IOFactory::createReader( 'Excel5' );
+            $reader = PHPExcel_IOFactory::createReader('Excel5');
         } else {
-            $reader = PHPExcel_IOFactory::createReader( 'Excel2007' );
+            $reader = PHPExcel_IOFactory::createReader('Excel2007');
         }
         
         $obj                = $reader->load($file_path);

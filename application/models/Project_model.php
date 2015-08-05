@@ -31,6 +31,19 @@ class Project_model extends CI_Model {
         return $result_set->result_array();
     }
 
+    public function get_project_area($group_by) {
+        $sql        = "SELECT SUM(project_area) AS project_area, $group_by ".
+                      "FROM (".
+                      "    SELECT  DISTINCT(project_number), project_area, $group_by ".
+                      "    FROM house_project ".
+                      "    NATURAL JOIN house_building ".
+                      ") p ".
+                      "GROUP BY $group_by";
+
+        $result_set = $this->db->query($sql);
+        return $result_set->result_array();
+    }
+
     /**
      * 获取在某些筛选条件下项目记录的数量.
      * @param  String  $project_city      - 项目所在的城市(可为空)
