@@ -415,6 +415,7 @@ class Dashboard extends CI_Controller {
         $height_type        = $this->input->get('heightType');
         $area_type          = $this->input->get('areaType');
         $project_number     = $this->input->get('number');
+        $display_all        = $this->input->get('displayAll');
         $page_number        = $this->input->get('page');
         $group_by           = $this->get_group_by_field($this->input->get('groupBy'));
 
@@ -424,7 +425,7 @@ class Dashboard extends CI_Controller {
         $height_upper_bound = NULL;
         $area_lower_bound   = NULL;
         $area_upper_bound   = NULL;
-        $limit              = 50;
+        $limit              = $display_all ? 2147483647 : 50;
         $offset             = $page_number <= 1 ? 0 : ($page_number - 1) * $limit;
 
         if ( $height_type != NULL ) {

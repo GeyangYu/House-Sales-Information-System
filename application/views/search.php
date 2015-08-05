@@ -48,7 +48,7 @@
                         </h2>
                     </div> <!-- .span6 -->
                     <div class="span6 text-right">
-                        <button id="display-all-button" class="btn btn-inverse">显示全部</button>
+                        <button id="display-all-button" class="btn btn-inverse" data-toggle="button">显示全部</button>
                         <button id="export-button" class="btn btn-danger">导出数据</button>
                     </div> <!-- .span6 -->
                 </div> <!-- .row-fluid -->
@@ -352,6 +352,12 @@
             getCondictions(1, 'getRecords');
         });
 
+        $('#display-all-button').click(function() {
+            setTimeout(function() {
+                getCondictions(1, 'getRecords');
+            }, 100);
+        })
+
         $('label.radio', '#stats').click(function() {
             setTimeout(function() {
                 getCondictions(1, 'getRecords');
@@ -390,6 +396,7 @@
                 projectType     = $('#project-type').val().trim() || null,
                 heightType      = $('#height-type').val().trim() || null,
                 areaType        = $('#area-type').val().trim() || null,
+                displayAll      = $('#display-all-button').hasClass('active') ? 1 : 0,
                 number          = $('#number').val().trim() || null;
                 checkedStat     = $('label.radio.checked').attr('for'),
                 groupBy         = checkedStat != null ? checkedStat.substr(5) : 'project-id';
@@ -398,14 +405,14 @@
                 $('.btn-primary', '#conditions').attr('disabled', 'disabled');
                 $('.btn-primary', '#conditions').html('请稍后...');
 
-                return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
+                return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, displayAll, pageNumber, groupBy);
             } else {
                 return exportResult(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, groupBy);
             }
         }
     </script>
     <script type="text/javascript">
-        function getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy) {
+        function getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, displayAll, pageNumber, groupBy) {
             var request = {
                 'city': city,
                 'startTime': startTime,
@@ -420,6 +427,7 @@
                 'areaType': areaType,
                 'number': number,
                 'page': pageNumber,
+                'displayAll': displayAll,
                 'groupBy': groupBy
             };
 
