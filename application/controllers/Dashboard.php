@@ -488,6 +488,8 @@ class Dashboard extends CI_Controller {
 
         $records    = $this->get_export_records();
         $file_path  = './assets/tmp/output.xlsx';
+        
+        file_exists($file_path) && unlink($file_path);
         $this->lib_excel->export_data_to_excel($records, $file_path);
 
         $result     = array(
