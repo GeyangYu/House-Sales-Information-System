@@ -41,9 +41,16 @@
             <?php include_once('include/header.php') ?>
             <!-- Content -->
             <div id="content">
-                <h2 class="page-header">
-                    <i class="fa fa-search"></i> 查询数据
-                </h2>
+                <div class="row-fluid">
+                    <div class="span6">
+                        <h2 class="page-header">
+                            <i class="fa fa-search"></i> 查询数据
+                        </h2>
+                    </div> <!-- .span6 -->
+                    <div class="span6 text-right">
+                        <button id="export-button" class="btn btn-warning">导出数据</button>
+                    </div> <!-- .span6 -->
+                </div> <!-- .row-fluid -->
                 <div id="conditions" class="section">
                     <div class="header">
                         <h5>筛选条件</h5>
