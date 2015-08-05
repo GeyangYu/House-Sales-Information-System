@@ -399,9 +399,10 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * 根据筛选条件获取指定的数据记录集, 以JSON的形式返回.
+     * 封装查询参数.
+     * @return 接收HTTP请求中的参数并封装成一个数组
      */
-    public function get_records() {
+    private function get_query_parameters() {
         $project_city       = $this->input->get('city');
         $start_time         = $this->input->get('startTime');
         $end_time           = $this->input->get('endTime');
@@ -409,11 +410,11 @@ class Dashboard extends CI_Controller {
         $project_block      = $this->input->get('block');
         $project_name       = $this->input->get('projectName');
         $project_function   = $this->input->get('function');
-        $building           = $this->input->get('building');
+        $building_id        = $this->input->get('building');
         $project_type       = $this->input->get('projectType');
         $height_type        = $this->input->get('heightType');
         $area_type          = $this->input->get('areaType');
-        $number             = $this->input->get('number');
+        $project_number     = $this->input->get('number');
         $page_number        = $this->input->get('page');
         $group_by           = $this->get_group_by_field($this->input->get('groupBy'));
 
@@ -456,18 +457,40 @@ class Dashboard extends CI_Controller {
             }
         }
 
-        $records            = $this->get_report_records($project_city, $time_lower_bound, $time_upper_bound, 
-                                $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
-                                $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                                $area_upper_bound, $number, $offset, $limit, $group_by);
-        $number_of_records  = $this->Record_model->get_number_of_records($project_city, $time_lower_bound, 
-                                $time_upper_bound, $project_district, $project_block, $project_name, $project_function, $building, 
-                                $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                                $area_upper_bound, $number);
+        $parameters         = array(
+            'project_city'          => $project_city,
+            'time_lower_bound'      => $time_lower_bound,
+            'time_upper_bound'      => $time_upper_bound,
+            'project_district'      => $project_district,
+            'project_block'         => $project_block,
+            'project_name'          => $project_name,
+            'project_function'      => $project_function,
+            'building_id'           => $building_id,
+            'project_type'          => $project_type,
+            'height_lower_bound'    => $height_lower_bound,
+            'height_upper_bound'    => $height_upper_bound,
+            'area_lower_bound'      => $area_lower_bound,
+            'area_upper_bound'      => $area_upper_bound,
+            'project_number'        => $project_number,
+            'offset'                => $offset,
+            'limit'                 => $limit,
+            'group_by'              => $group_by,
+        );
+        return $parameters;
+    }
+
+    /**
+     * 根据筛选条件获取指定的数据记录集, 以JSON的形式返回.
+     */
+    public function get_records() {
+        $parameters         = $this->get_query_parameters();
+        
+        $records            = $this->get_report_records($parameters);
+        $number_of_records  = $this->Record_model->get_number_of_records($parameters);
         $result             = array(
             'isSuccessful'  => count($records) != 0,
             'records'       => $records,
-            'totalPages'    => ceil($number_of_records / $limit),
+            'totalPages'    => ceil($number_of_records / $parameters['limit']),
         );
 
         return $this->output
@@ -495,54 +518,19 @@ class Dashboard extends CI_Controller {
 
     /**
      * 根据筛选条件获取指定的数据记录集.
-     * @param  [type] $project_city       [description]
-     * @param  [type] $time_lower_bound   [description]
-     * @param  [type] $time_upper_bound   [description]
-     * @param  [type] $project_district   [description]
-     * @param  [type] $project_block      [description]
-     * @param  [type] $project_name       [description]
-     * @param  [type] $project_function   [description]
-     * @param  [type] $building           [description]
-     * @param  [type] $project_type       [description]
-     * @param  [type] $height_lower_bound [description]
-     * @param  [type] $height_upper_bound [description]
-     * @param  [type] $area_lower_bound   [description]
-     * @param  [type] $area_upper_bound   [description]
-     * @param  [type] $number             [description]
-     * @param  [type] $offset             [description]
-     * @param  [type] $limit              [description]
      * @return [type]                     [description]
      */
-    private function get_report_records($project_city, $time_lower_bound, $time_upper_bound, 
-        $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $offset, $limit, $group_by) {
-        $records        = $this->Record_model->get_records($project_city, $time_lower_bound, $time_upper_bound, 
-                            $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
-                            $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $offset, $limit);
-        $project_area   = $this->get_map_result($this->Record_model->get_project_area($project_city, $time_lower_bound,
-                            $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
-                            $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $group_by), 'project_area', $group_by);
-        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($project_city, $time_lower_bound,
-                            $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
-                            $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $group_by), 'sold_suit', $group_by);
-        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($project_city, $time_lower_bound,
-                            $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
-                            $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $group_by), 'sold_price', $group_by);
-        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($project_city, $time_lower_bound,
-                            $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
-                            $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $group_by), 'sold_area', $group_by);
-        $average_price  = $this->get_map_result($this->Record_model->get_average_price($project_city, $time_lower_bound,
-                            $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
-                            $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-                            $area_upper_bound, $number, $group_by), 'average_price', $group_by);
-        $rest_area      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_area($project_city, $time_upper_bound), 'rest_area');
-        $rest_suit      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_suit($project_city, $time_upper_bound), 'rest_suit');
+    private function get_report_records($parameters) {
+        $group_by       = $parameters['group_by'];
+
+        $records        = $this->Record_model->get_records($parameters);
+        $project_area   = $this->get_map_result($this->Record_model->get_project_area($parameters), 'project_area', $group_by);
+        $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($parameters), 'sold_suit', $group_by);
+        $sold_price     = $this->get_map_result($this->Record_model->get_sold_price($parameters), 'sold_price', $group_by);
+        $sold_area      = $this->get_map_result($this->Record_model->get_sold_area($parameters), 'sold_area', $group_by);
+        $average_price  = $this->get_map_result($this->Record_model->get_average_price($parameters), 'average_price', $group_by);
+        $rest_area      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_area($parameters), 'rest_area');
+        $rest_suit      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_suit($parameters), 'rest_suit');
 
         foreach ( $records as &$record ) {
             $project_id                 = $record['project_id'];

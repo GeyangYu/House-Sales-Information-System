@@ -60,3 +60,19 @@ div#main-content table.table thead th {
 	text-align: center;
 	vertical-align: middle;
 }
+
+div#main-content table.table tbody td.sold-suit,
+div#main-content table.table tbody td.sold-price,
+div#main-content table.table tbody td.project-area,
+div#main-content table.table tbody td.average-price {
+	color: #2980b9;
+}
+
+div#main-content table.table tbody td.sold-suit,
+div#main-content table.table tbody td.sold-price,
+div#main-content table.table tbody td.project-area,
+div#main-content table.table tbody td.average-price,
+div#main-content table.table tbody td.rest-area,
+div#main-content table.table tbody td.rest-suit {
+	text-align: right;
+}

@@ -19,36 +19,18 @@ class Record_model extends CI_Model {
 
     /**
      * 获取在某些筛选条件下成交记录的数量.
-     * @param  [type] $city               - 城市
-     * @param  [type] $time_lower_bound   - 起始时间(YYYY-mm-dd)
-     * @param  [type] $time_upper_bound   - 结束时间(YYYY-mm-dd)
-     * @param  [type] $district           - 行政区划
-     * @param  [type] $block              - 板块名称
-     * @param  [type] $project_name       - 项目名称
-     * @param  [type] $function           - 功能区块
-     * @param  [type] $building           - 幢号
-     * @param  [type] $project_type       - 项目类型
-     * @param  [type] $height_lower_bound - 房屋高度的下界
-     * @param  [type] $height_upper_bound - 房屋高度的上界
-     * @param  [type] $area_lower_bound   - 房屋面积的下界
-     * @param  [type] $area_upper_bound   - 房屋面积的上界
-     * @param  [type] $number             - 预售证号
+     * @param  $conditions - 筛选条件
      * @return 在某些筛选条件下成交记录的数量
      */
-    public function get_number_of_records($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number) {
-        $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    public function get_number_of_records($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
         $sql        = 'SELECT * FROM house_record '. 
                       'NATURAL JOIN house_project '.
                       'NATURAL JOIN house_building '.
                       'WHERE project_city = ? '.
                       'AND record_time >= ? AND record_time <= ?';
 
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->num_rows();
@@ -56,157 +38,119 @@ class Record_model extends CI_Model {
     
     /**
      * Get records using several conditions.
-     * @param  [type] $city               - 城市
-     * @param  [type] $time_lower_bound   - 起始时间(YYYY-mm-dd)
-     * @param  [type] $time_upper_bound   - 结束时间(YYYY-mm-dd)
-     * @param  [type] $district           - 行政区划
-     * @param  [type] $block              - 板块名称
-     * @param  [type] $project_name       - 项目名称
-     * @param  [type] $function           - 功能区块
-     * @param  [type] $building           - 幢号
-     * @param  [type] $project_type       - 项目类型
-     * @param  [type] $height_lower_bound - 房屋高度的下界
-     * @param  [type] $height_upper_bound - 房屋高度的上界
-     * @param  [type] $area_lower_bound   - 房屋面积的下界
-     * @param  [type] $area_upper_bound   - 房屋面积的上界
-     * @param  [type] $number             - 预售证号
-     * @param  [type] $offset             [description]
-     * @param  [type] $limit              [description]
-     * @return [type]                     [description]
+     * @param  $conditions - 筛选条件
+     * @return 符合筛选结果的记录
      */
-    public function get_records($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $offset, $limit) {
-        $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    public function get_records($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
         $sql        = 'SELECT * FROM house_record '. 
                       'NATURAL JOIN house_project '.
                       'NATURAL JOIN house_building '.
                       'WHERE project_city = ? '.
                       'AND record_time >= ? AND record_time <= ?';
 
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
         $sql       .= ' ORDER BY record_time LIMIT ?, ?';
-        array_push($parameters, $offset, $limit);
+        array_push($parameters, $conditions['offset'], $conditions['limit']);
         
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
     }
 
     /**
-     * [get_records_sql description]
-     * @param  [type] $base_sql           [description]
-     * @param  [type] $parameters         [description]
-     * @param  [type] $district           [description]
-     * @param  [type] $block              [description]
-     * @param  [type] $project_name       [description]
-     * @param  [type] $function           [description]
-     * @param  [type] $building           [description]
-     * @param  [type] $project_type       [description]
-     * @param  [type] $height_lower_bound [description]
-     * @param  [type] $height_upper_bound [description]
-     * @param  [type] $area_lower_bound   [description]
-     * @param  [type] $area_upper_bound   [description]
-     * @param  [type] $number             [description]
+     * [get_query_sql description]
+     * @param  String $base_sql   - SQL 查询语句的模板
+     * @param  Array  $parameters - SQL 查询的参数列表
+     * @param  Array  $conditions - 筛选条件
      * @return [type]                     [description]
      */
-    private function get_records_sql($base_sql, &$parameters, $district, $block, 
-        $project_name, $function, $building, $project_type, $height_lower_bound, 
-        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number) {
-        if ( $district != NULL ) {
+    private function get_query_sql($base_sql, &$parameters, $conditions) {
+        if ( $conditions['project_district'] != NULL ) {
             $base_sql .= ' AND project_district = ?';
-            array_push($parameters, $district);
+            array_push($parameters, $conditions['project_district']);
         }
-        if ( $block != NULL ) {
+        if ( $conditions['project_block'] != NULL ) {
             $base_sql .= ' AND project_block = ?';
-            array_push($parameters, $block);
+            array_push($parameters, $conditions['project_block']);
         }
-        if ( $project_name != NULL ) {
+        if ( $conditions['project_name'] != NULL ) {
             $base_sql .= ' AND project_name = ?';
-            array_push($parameters, $project_name);
+            array_push($parameters, $conditions['project_name']);
         }
-        if ( $function != NULL ) {
+        if ( $conditions['project_function'] != NULL ) {
             $base_sql .= ' AND project_function = ?';
-            array_push($parameters, $function);
+            array_push($parameters, $conditions['project_function']);
         }
-        if ( $building != NULL ) {
+        if ( $conditions['building_id'] != NULL ) {
             $base_sql .= ' AND building_id = ?';
-            array_push($parameters, $building);
+            array_push($parameters, $conditions['building_id']);
         }
-        if ( $project_type != NULL ) {
+        if ( $conditions['project_type'] != NULL ) {
             $base_sql .= ' AND project_type = ?';
-            array_push($parameters, $project_type);
+            array_push($parameters, $conditions['project_type']);
         }
-        if ( $height_lower_bound != NULL ) {
+        if ( $conditions['height_lower_bound'] != NULL ) {
             $base_sql .= ' AND building_height >= ?';
-            array_push($parameters, $height_lower_bound);
+            array_push($parameters, $conditions['height_lower_bound']);
         }
-        if ( $height_upper_bound != NULL ) {
+        if ( $conditions['height_upper_bound'] != NULL ) {
             $base_sql .= ' AND building_height <= ?';
-            array_push($parameters, $height_upper_bound);
+            array_push($parameters, $conditions['height_upper_bound']);
         }
-        if ( $area_lower_bound != NULL ) {
+        if ( $conditions['area_lower_bound'] != NULL ) {
             $base_sql .= ' AND record_area >= ?';
-            array_push($parameters, $area_lower_bound);
+            array_push($parameters, $conditions['area_lower_bound']);
         }
-        if ( $area_upper_bound != NULL ) {
+        if ( $conditions['area_upper_bound'] != NULL ) {
             $base_sql .= ' AND record_area <= ?';
-            array_push($parameters, $area_upper_bound);
+            array_push($parameters, $conditions['area_upper_bound']);
         }
-        if ( $number != NULL ) {
+        if ( $conditions['project_number'] != NULL ) {
             $base_sql .= ' AND project_number = ?';
-            array_push($parameters, $number);
+            array_push($parameters, $conditions['project_number']);
         }
-
         return $base_sql;
     }
 
-    public function get_project_area($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $group_by) {
-        $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    /**
+     * 获取项目的总可售面积.
+     * @param  [type] $conditions [description]
+     * @return [type]             [description]
+     */
+    public function get_project_area($conditions) {
+        $parameters = array();
+        $group_by   = $conditions['group_by'];
+
         $sql        = "SELECT SUM(project_area) AS project_area, $group_by ".
                       "FROM (".
                       "    SELECT DISTINCT(project_number), project_area, $group_by ".
                       "    FROM house_project ".
                       "    NATURAL JOIN house_building ".
                       ") p ".
-                      "NATURAL JOIN house_project ";
+                      "NATURAL JOIN house_project ".
+                      "WHERE 1 ";
 
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
         $sql       .= 'GROUP BY '. $group_by;
 
         $result_set = $this->db->query($sql, $parameters);
-        // echo $this->db->last_query();
         return $result_set->result_array();
     }
     
     /**
      * [get_sold_suit description]
-     * @param  [type] $city              [description]
-     * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound  [description]
+     * @param  $conditions - 筛选条件
      * @return [type]             [description]
      */
-    public function get_sold_suit($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $group_by) {
-	    $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    public function get_sold_suit($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
         $sql        = 'SELECT *, COUNT(*) AS sold_suit '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ?';
                       
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
-        $sql       .= 'GROUP BY '. $group_by;
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
+        $sql       .= 'GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -214,25 +158,18 @@ class Record_model extends CI_Model {
     
     /**
      * [get_sold_price description]
-     * @param  [type] $city              [description]
-     * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound  [description]
+     * @param  $conditions - 筛选条件
      * @return [type]             [description]
      */
-    public function get_sold_price($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $group_by) {
-	    $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    public function get_sold_price($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
         $sql        = 'SELECT *, SUM(record_price) AS sold_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
                       
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
-        $sql       .= 'GROUP BY '. $group_by;
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
+        $sql       .= 'GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -240,25 +177,18 @@ class Record_model extends CI_Model {
     
     /**
      * [get_sold_area description]
-     * @param  [type] $city              [description]
-     * @param  [type] $time_lower_bound  [description]
-     * @param  [type] $time_upper_bound  [description]
+     * @param  $conditions - 筛选条件
      * @return [type]             [description]
      */
-    public function get_sold_area($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $group_by) {
-	    $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    public function get_sold_area($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
         $sql        = 'SELECT *, SUM(record_area) AS sold_area '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
                       
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
-        $sql       .= 'GROUP BY '. $group_by;
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
+        $sql       .= 'GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -266,31 +196,24 @@ class Record_model extends CI_Model {
     
     /**
      * 获取某个时间段内房屋的平均价格.
-     * @param  String $city             - 项目所在城市
-     * @param  Date   $time_lower_bound - 分析起始时间
-     * @param  Date   $time_upper_bound - 分析截止时间
+     * @param  $conditions - 筛选条件
      * @return [type]             [description]
      */
-    public function get_average_price($city, $time_lower_bound, $time_upper_bound, 
-        $district, $block, $project_name, $function, $building, $project_type, 
-        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
-        $area_upper_bound, $number, $group_by) {
-	    $parameters = array($city, $time_lower_bound, $time_upper_bound);
+    public function get_average_price($conditions) {
+        $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
         $sql        = 'SELECT *, AVG(record_price) AS average_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '; 
         
-        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
-                        $project_name, $function, $building, $project_type, $height_lower_bound, 
-                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
-        $sql       .= 'GROUP BY '. $group_by;
+        $sql        = $this->get_query_sql($sql, $parameters, $conditions);
+        $sql       .= 'GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
     }
     
-    public function get_rest_area($city, $time_upper_bound) {
+    public function get_rest_area($conditions) {
         $sql        = 'SELECT b2.project_id, b2.building_id, b2.project_area - ('.
                       '    SELECT SUM(record_area) '.
                       '    FROM house_record '.
@@ -301,17 +224,18 @@ class Record_model extends CI_Model {
                       '    AND record_time <= ?'.
                       ') AS rest_area '.
                       'FROM house_building b2';
-        $result_set = $this->db->query($sql, array($city, $time_upper_bound));
+
+        $result_set = $this->db->query($sql, 
+            array($conditions['project_city'], $conditions['time_upper_bound']));
         return $result_set->result_array();  
     }
     
     /**
      * 获取截止到某个时间的库存房源.
-     * @param  String $city             - 项目所在城市
-     * @param  Date   $time_upper_bound - 截止时间
+     * @param  $conditions - 筛选条件
      * @return 该城市中截止到指定时间所有剩余房源的列表
      */
-    public function get_rest_suit($city, $time_upper_bound) {
+    public function get_rest_suit($conditions) {
         $sql        = 'SELECT b2.project_id, b2.building_id, b2.project_total_suit - ('.
                       '    SELECT COUNT(*) '.
                       '    FROM house_record '.
@@ -322,7 +246,9 @@ class Record_model extends CI_Model {
                       '    AND record_time <= ?'.
                       ') AS rest_suit '.
                       'FROM house_building b2';
-        $result_set = $this->db->query($sql, array($city, $time_upper_bound));
+
+        $result_set = $this->db->query($sql, 
+            array($conditions['project_city'], $conditions['time_upper_bound']));
         return $result_set->result_array();  
     }
 

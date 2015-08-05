@@ -132,7 +132,7 @@ div#wrapper div#container div#header {
 
 div#wrapper div#container div#header a#sidebar-toggle {
 	color: #fff;
-	display: none;
+	display: block;
 	font-size: 24px;
 	padding: 6px 8px;
 	text-decoration: none;
