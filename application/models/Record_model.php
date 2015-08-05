@@ -162,6 +162,29 @@ class Record_model extends CI_Model {
 
         return $base_sql;
     }
+
+    public function get_project_area($city, $time_lower_bound, $time_upper_bound, 
+        $district, $block, $project_name, $function, $building, $project_type, 
+        $height_lower_bound, $height_upper_bound, $area_lower_bound, 
+        $area_upper_bound, $number, $group_by) {
+        $parameters = array($city, $time_lower_bound, $time_upper_bound);
+        $sql        = "SELECT SUM(project_area) AS project_area, $group_by ".
+                      "FROM (".
+                      "    SELECT DISTINCT(project_number), project_area, $group_by ".
+                      "    FROM house_project ".
+                      "    NATURAL JOIN house_building ".
+                      ") p ".
+                      "NATURAL JOIN house_project ";
+
+        $sql        = $this->get_records_sql($sql, $parameters, $district, $block, 
+                        $project_name, $function, $building, $project_type, $height_lower_bound, 
+                        $height_upper_bound, $area_lower_bound, $area_upper_bound, $number);
+        $sql       .= 'GROUP BY '. $group_by;
+
+        $result_set = $this->db->query($sql, $parameters);
+        // echo $this->db->last_query();
+        return $result_set->result_array();
+    }
     
     /**
      * [get_sold_suit description]
@@ -238,7 +261,6 @@ class Record_model extends CI_Model {
         $sql       .= 'GROUP BY '. $group_by;
 
         $result_set = $this->db->query($sql, $parameters);
-//         echo $this->db->last_query();
         return $result_set->result_array();
     }
     

@@ -521,7 +521,10 @@ class Dashboard extends CI_Controller {
                             $project_district, $project_block, $project_name, $project_function, $building, $project_type, 
                             $height_lower_bound, $height_upper_bound, $area_lower_bound, 
                             $area_upper_bound, $number, $offset, $limit);
-        $project_area   = $this->get_map_result($this->Project_model->get_project_area($group_by), 'project_area', $group_by);
+        $project_area   = $this->get_map_result($this->Record_model->get_project_area($project_city, $time_lower_bound,
+                            $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
+                            $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
+                            $area_upper_bound, $number, $group_by), 'project_area', $group_by);
         $sold_suit      = $this->get_map_result($this->Record_model->get_sold_suit($project_city, $time_lower_bound,
                             $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
                             $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
