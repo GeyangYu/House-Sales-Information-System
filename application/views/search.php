@@ -378,6 +378,9 @@
     </script>
     <script type="text/javascript">
         function getCondictions(pageNumber, callback) {
+            $('.btn-primary', '#conditions').attr('请稍后...');
+            $('.btn-primary', '#conditions').html('disabled', 'disabled');
+
             var city            = $('#city').val().trim() || null,
                 startTime       = $('#start-time').val().trim() || null,
                 endTime         = $('#end-time').val().trim() || null,
@@ -425,7 +428,10 @@
                 data: request,
                 dataType: 'JSON',
                 success: function(result){
-                    return processResult(result, pageNumber);
+                    processResult(result, pageNumber);
+
+                    $('.btn-primary', '#conditions').removeAttr('disabled');
+                    $('.btn-primary', '#conditions').html('筛选');
                 }
             });
         }

@@ -42,7 +42,7 @@ class Record_model extends CI_Model {
             array_push($parameters, $conditions['project_function']);
         }
         if ( $conditions['building_id'] != NULL ) {
-            $base_sql .= ' AND building_id = ?';
+            $base_sql .= ' AND house_building.building_id = ?';
             array_push($parameters, $conditions['building_id']);
         }
         if ( $conditions['project_type'] != NULL ) {
