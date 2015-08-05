@@ -48,7 +48,8 @@
                         </h2>
                     </div> <!-- .span6 -->
                     <div class="span6 text-right">
-                        <button id="export-button" class="btn btn-warning">导出数据</button>
+                        <button id="display-all-button" class="btn btn-inverse">显示全部</button>
+                        <button id="export-button" class="btn btn-danger">导出数据</button>
                     </div> <!-- .span6 -->
                 </div> <!-- .row-fluid -->
                 <div id="conditions" class="section">
@@ -221,8 +222,8 @@
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="column-project-area">
-                                    <input id="column-project-area" type="checkbox" data-toggle="checkbox" checked> 建筑面积总和
+                                <label class="checkbox" for="column-sold-area">
+                                    <input id="column-sold-area" type="checkbox" data-toggle="checkbox" checked> 建筑面积总和
                                 </label>
                             </div> <!-- .span3 -->
                         </div> <!-- .row-fluid -->
@@ -238,8 +239,8 @@
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
-                                <label class="checkbox" for="column-rest-area">
-                                    <input id="column-rest-area" type="checkbox" data-toggle="checkbox" checked> 总可售面积
+                                <label class="checkbox" for="column-project-area">
+                                    <input id="column-project-area" type="checkbox" data-toggle="checkbox" checked> 总可售面积
                                 </label>
                             </div> <!-- .span3 -->
                             <div class="span3">
@@ -496,10 +497,10 @@
                 isColumnDisplayed('area-type'), getAreaType(record['record_area']), 
                 isColumnDisplayed('sold-suit'), record['sold_suit'], 
                 isColumnDisplayed('sold-price'), parseInt(record['sold_price']).toFixed(2), 
-                isColumnDisplayed('project-area'), parseInt(record['project_area']).toFixed(2), 
+                isColumnDisplayed('sold-area'), parseInt(record['sold_area']).toFixed(2), 
                 isColumnDisplayed('average-price'), parseInt(record['average_price']).toFixed(2), 
                 isColumnDisplayed('number'), record['project_number'],
-                isColumnDisplayed('rest-area'), record['rest_area'], 
+                isColumnDisplayed('project-area'), record['project_area'],
                 isColumnDisplayed('rest-suit'), record['rest_suit']);
         }
     </script>
