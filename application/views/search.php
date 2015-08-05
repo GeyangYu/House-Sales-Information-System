@@ -298,10 +298,10 @@
                                 <th class="area-type">房屋面积类型</th>
                                 <th class="sold-suit">销售套数</th>
                                 <th class="sold-price">成交总价汇总</th>
-                                <th class="project-area">建筑面积总和</th>
+                                <th class="sold-area">建筑面积总和</th>
                                 <th class="average-price">均价</th>
                                 <th class="number">预售证号</th>
-                                <th class="rest-area">总可售面积</th>
+                                <th class="project-area">总可售面积</th>
                                 <th class="rest-suit">截止该月库存房源</th>
                             </tr>
                         </thead>
@@ -486,10 +486,10 @@
                                  '    <td class="area-type %s">%s</td>' +
                                  '    <td class="sold-suit %s">%s</td>' +
                                  '    <td class="sold-price %s">%s</td>' +
-                                 '    <td class="project-area %s">%s</td>' +
+                                 '    <td class="sold-area %s">%s</td>' +
                                  '    <td class="average-price %s">%s</td>' +
                                  '    <td class="number %s">%s</td>' +
-                                 '    <td class="rest-area %s">%s</td>' +
+                                 '    <td class="project-area %s">%s</td>' +
                                  '    <td class="rest-suit %s">%s</td>' +
                                  '</tr>';
 
