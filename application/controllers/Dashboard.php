@@ -480,7 +480,95 @@ class Dashboard extends CI_Controller {
     }
 
     /**
-     * 根据筛选条件获取指定的数据记录集, 以JSON的形式返回.
+     * 导出记录至Excel.
+     * @return 记录导出结果
+     */
+    public function export() {
+        $this->load->library('lib_excel');
+
+        $records    = $this->get_export_records();
+        $file_path  = './assets/tmp/output.xlsx';
+        $this->lib_excel->export_data_to_excel($records, $file_path);
+
+        $result     = array(
+            'isSuccessful'  => true,
+            'filePath'      => $file_path,
+        );
+
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(200)
+            ->set_output(json_encode($result));
+    }
+
+    /**
+     * 获取需要导出的数据.
+     * @return 包含需要导出数据的数组
+     */
+    private function get_export_records() {
+        $parameters         = $this->get_query_parameters();
+        $number_of_records  = $this->Record_model->get_number_of_records($parameters);
+        
+        $parameters['limit']= $number_of_records;
+        $records            = $this->get_report_records($parameters);
+
+        $export_records     = array(
+            array('交易时间', '城市', '行政区划', '板块名称', '项目名称', '功能区块', '幢号', '项目类型', '房屋类型', '房屋面积类型', '销售套数', '成交总价汇总', '建筑面积总和', '均价', '预售证号', '总可售面积', '截止该月库存房源'),
+        );
+        foreach ( $records as $record ) {
+            $project_type   = $record['project_type'] == 0 ? '保障性住宅' : '新建商品住宅';
+            $height_type    = $this->get_height_type($record['building_height']);
+            $area_type      = $this->get_area_type($record['record_area']);
+
+            array_push($export_records, array(
+                $record['record_time'], $record['project_city'], $record['project_district'], $record['project_block'], 
+                $record['project_name'], $record['project_function'], $record['building_id'], $project_type, $height_type,
+                $area_type, $record['sold_suit'], $record['sold_price'], $record['project_area'], $record['average_price'],
+                $record['project_number'], $record['rest_area'], $record['rest_suit']
+            ));
+        }
+        return $export_records;
+    }
+
+
+    /**
+     * 获取房屋类型.
+     * @param  int $height - 房屋的高度(层数)
+     * @return 房屋类型
+     */
+    private function get_height_type($height) {
+        if ( $height >= 2 && $height <= 6 ) {
+            return '多层住宅';
+        } else if ( $height >= 7 && $height <= 11 ) {
+            return '小高层';
+        } else if ( $height >= 12 ) {
+            return '高层';
+        } else if ( $height >= 1.20 && $height <= 1.40 ) {
+            return '别墅';
+        } else if ( $height >= 1.40 && $height <= 1.60 ) {
+            return '跃层';
+        }
+        return '';
+    }
+
+    /**
+     * 获取房屋面积类型.
+     * @param  float $area - 房屋面积
+     * @return 房屋面积类型
+     */
+    private function get_area_type($area) {
+        if ( $area < 90 ) {
+            return '90平方米以下';
+        } else if ( $area > 144 ) {
+            return '144平方米以上';
+        } else {
+            return '90-144平方米';
+        }
+    }
+
+    /**
+     * 根据筛选条件获取指定的数据记录集
+     * @return  包含预期数据的JSON对象
      */
     public function get_records() {
         $parameters         = $this->get_query_parameters();
