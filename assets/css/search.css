@@ -1,3 +1,7 @@
+button#export-button {
+	margin-top: 12px;
+}
+
 div.section {
 	background-color: #fafafa;
 	border: 2px solid #ccc;
