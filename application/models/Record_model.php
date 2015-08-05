@@ -121,7 +121,7 @@ class Record_model extends CI_Model {
         $parameters = array();
         $group_by   = $conditions['group_by'];
 
-        $sql        = "SELECT c.project_area AS project_area, c.project_id AS project_id, building_id ". ($group_by == 'project_id' ? '' : ", $group_by ") .
+        $sql        = "SELECT c.project_area AS project_area, c.project_id AS project_id, house_building.building_id ". ($group_by == 'project_id' ? '' : ", $group_by ") .
                       "FROM ( ".
                       "    SELECT SUM(project_area) AS project_area, project_id ".
                       "    FROM ( ".
@@ -132,6 +132,7 @@ class Record_model extends CI_Model {
                       "GROUP BY project_id ".
                       ") c ".
                       "NATURAL JOIN house_project ".
+                      "NATURAL JOIN house_record ".
                       "INNER JOIN house_building ON house_building.project_id = house_project.project_id ".
                       "WHERE 1";
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
@@ -154,7 +155,7 @@ class Record_model extends CI_Model {
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ?';
                       
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-        $sql       .= 'GROUP BY '. $conditions['group_by'];
+        $sql       .= ' GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -174,7 +175,7 @@ class Record_model extends CI_Model {
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
                       
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-        $sql       .= 'GROUP BY '. $conditions['group_by'];
+        $sql       .= ' GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -194,7 +195,7 @@ class Record_model extends CI_Model {
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? ';
                       
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-        $sql       .= 'GROUP BY '. $conditions['group_by'];
+        $sql       .= ' GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
@@ -214,7 +215,7 @@ class Record_model extends CI_Model {
                       'WHERE project_city = ? AND record_time >= ? AND record_time <= ? '; 
         
         $sql        = $this->get_query_sql($sql, $parameters, $conditions);
-        $sql       .= 'GROUP BY '. $conditions['group_by'];
+        $sql       .= ' GROUP BY '. $conditions['group_by'];
 
         $result_set = $this->db->query($sql, $parameters);
         return $result_set->result_array();
