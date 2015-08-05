@@ -268,6 +268,21 @@ class Record_model extends CI_Model {
         return $result_set->result_array();
     }
     
+    public function get_rest_area($city, $time_upper_bound) {
+        $sql        = 'SELECT b2.project_id, b2.building_id, b2.project_area - ('.
+                      '    SELECT SUM(record_area) '.
+                      '    FROM house_record '.
+                      '    NATURAL JOIN house_building b1 '.
+                      '    NATURAL JOIN house_project '.
+                      '    WHERE b1.project_number = b2.project_number '.
+                      '    AND project_city = ? '.
+                      '    AND record_time <= ?'.
+                      ') AS rest_area '.
+                      'FROM house_building b2';
+        $result_set = $this->db->query($sql, array($city, $time_upper_bound));
+        return $result_set->result_array();  
+    }
+    
     /**
      * 获取截止到某个时间的库存房源.
      * @param  String $city             - 项目所在城市

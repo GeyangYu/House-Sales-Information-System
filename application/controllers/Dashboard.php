@@ -537,6 +537,7 @@ class Dashboard extends CI_Controller {
         $time_upper_bound, $project_district, $project_block, $project_name, $project_function, 
         $building, $project_type, $height_lower_bound, $height_upper_bound, $area_lower_bound, 
         $area_upper_bound, $number, $group_by), 'average_price', $group_by);
+        $rest_area      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_area($project_city, $time_upper_bound), 'rest_area');
         $rest_suit      = $this->get_map_result_using_project_id_and_building_id($this->Record_model->get_rest_suit($project_city, $time_upper_bound), 'rest_suit');
 
         foreach ( $records as &$record ) {
@@ -550,6 +551,7 @@ class Dashboard extends CI_Controller {
             $record['sold_price']       = $sold_price[$$group_by];
             $record['sold_area']        = $sold_area[$$group_by];
             $record['average_price']    = $average_price[$$group_by];
+            $record['rest_area']        = $rest_area[$project_id][$building_id];
             $record['rest_suit']        = $rest_suit[$project_id][$building_id];
         }
         return $records;
