@@ -310,7 +310,17 @@ class Dashboard extends CI_Controller {
 
         if ( is_array($projects) ) {
             foreach ( $projects as $project ) {
-                
+	            $project_id        = $project->projectId;
+	            $project_name      = $project->projectName;
+                $project_type      = $project->projectType;
+                $project_address   = $project->projectAddress;
+                $project_city      = $project->projectCity;
+                $project_district  = $project->projectDistrict;
+                $project_block     = $project->projectBlock;
+                $project_function  = $project->projectFunction;	           
+	           
+                $this->Project_model->update_project($project_id, $project_name, $project_type, $project_address, $project_city,
+                    $project_district, $project_block, $project_function, NULL);
             }
             $isSuccessful   = true;
         }
@@ -334,7 +344,16 @@ class Dashboard extends CI_Controller {
 
         if ( is_array($buildings) ) {
             foreach ( $buildings as $building ) {
+	            $project_id         = $building->projectId;                    
+	            $building_id        = $building->buildingId;                             
+	            $building_structure = $building->buildingStructure;
+	            $building_height    = $building->buildingHeight;     
+                $project_number     = $building->projectNumber;      
+                $project_area       = $building->projectArea;
+                $project_total_suit = $building->projectTotalSuit;
                 
+                $this->Building_model->update_building($project_id, $building_id, $building_structure, $building_height,
+                    $project_number, $project_area, $project_total_suit); 
             }
             $isSuccessful   = true;
         }

@@ -95,4 +95,21 @@ class Project_model extends CI_Model {
         );
         return $this->db->insert('house_project', $project);
     }
+    
+    public function update_project($project_id, $project_name, $project_type, $project_address, $project_city, 
+        $project_district, $project_block, $project_function, $project_reserve) {
+        $project    = array(
+            'project_name'      => $project_name,
+            'project_type'      => $project_type,
+            'project_address'   => $project_address,
+            'project_city'      => $project_city,
+            'project_district'  => $project_district, 
+            'project_block'     => $project_block, 
+            'project_function'  => $project_function, 
+            'project_reserve'   => $project_reserve,
+        );
+        $this->db->where('project_id', $project_id);
+        return $this->db->update('house_project', $project);
+    }
+
 }
