@@ -377,7 +377,7 @@
         });
     </script>
     <script type="text/javascript">
-        function getCondictions(pageNumber) {
+        function getCondictions(pageNumber, callback) {
             var city            = $('#city').val().trim() || null,
                 startTime       = $('#start-time').val().trim() || null,
                 endTime         = $('#end-time').val().trim() || null,
@@ -393,7 +393,11 @@
                 checkedStat     = $('label.radio.checked').attr('for'),
                 groupBy         = checkedStat != null ? checkedStat.substr(5) : 'project-id';
 
-            return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
+            if ( typeof(callback) == 'undefined' || callback == 'getRecords' ) {
+                return getRecords(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, pageNumber, groupBy);
+            } else {
+                return exportResult(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, groupBy);
+            }
         }
     </script>
     <script type="text/javascript">
@@ -546,6 +550,50 @@
             paginationString     += '<li class="next ' + ( currentPage < totalPages ? '>' : 'disabled') + '"><a href="#">&gt;</a></li>';
 
             $('#pagination > ul').append(paginationString);
+        }
+    </script>
+    <script type="text/javascript">
+        $('#export-button').click(function() {
+            $('#export-button').attr('disabled', 'disabled');
+            $('#export-button').html('请稍后...');
+
+            return getCondictions(0, 'exportResult');
+        });
+    </script>
+    <script type="text/javascript">
+        function exportResult(city, startTime, endTime, district, block, projectName, funktion, building, projectType, heightType, areaType, number, groupBy) {
+            var request = {
+                'city': city,
+                'startTime': startTime,
+                'endTime': endTime,
+                'district': district,
+                'block': block,
+                'projectName': projectName,
+                'function': funktion,
+                'building': building,
+                'projectType': projectType,
+                'heightType': heightType,
+                'areaType': areaType,
+                'number': number,
+                'groupBy': groupBy
+            };
+
+            $.ajax({
+                type: 'GET',
+                url: '<?php echo base_url('/dashboard/export-records'); ?>',
+                data: request,
+                dataType: 'JSON',
+                success: function(result){
+                    if ( result['isSuccessful'] ) {
+                        window.location = '<?php echo base_url(); ?>' + result['filePath'];
+                    } else {
+                        alert('导出数据时发生了未知错误.');
+                    }
+
+                    $('#export-button').removeAttr('disabled');
+                    $('#export-button').html('导出数据');
+                }
+            });
         }
     </script>
 </body>

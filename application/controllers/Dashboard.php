@@ -483,7 +483,7 @@ class Dashboard extends CI_Controller {
      * 导出记录至Excel.
      * @return 记录导出结果
      */
-    public function export() {
+    public function export_records() {
         $this->load->library('lib_excel');
 
         $records    = $this->get_export_records();
