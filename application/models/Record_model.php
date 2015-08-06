@@ -208,7 +208,7 @@ class Record_model extends CI_Model {
      */
     public function get_average_price($conditions) {
         $parameters = array($conditions['project_city'], $conditions['time_lower_bound'], $conditions['time_upper_bound']);
-        $sql        = 'SELECT *, AVG(record_price) AS average_price '.
+        $sql        = 'SELECT *, SUM(record_price) / SUM(record_area) AS average_price '.
                       'FROM house_record ' . 
                       'NATURAL JOIN house_project '.
                       'NATURAL JOIN house_building '.
