@@ -20,7 +20,8 @@ class Lib_excel extends PHPExcel {
      *         excel file.
      */
     public function get_data_from_excel($file_path) {
-        if ( substr( $file_path, -3 ) == 'xls' ) {
+        $file_ext   = substr( $file_path, -3 );
+        if ( strtolower($file_ext) == 'xls' ) {
             $reader = PHPExcel_IOFactory::createReader('Excel5');
         } else {
             $reader = PHPExcel_IOFactory::createReader('Excel2007');

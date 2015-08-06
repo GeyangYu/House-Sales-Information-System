@@ -66,8 +66,8 @@ class Dashboard extends CI_Controller {
      */
     private function upload_files() {
         $config['upload_path']      = './application/uploads/';
-        $config['allowed_types']    = 'xls|xlsx';
-        $config['max_size']         = '1024';
+        $config['allowed_types']    = 'xls|xlsx|XLS|XLSX';
+        $config['max_size']         = '131072';
         $this->load->library('lib_upload', $config);
 
         return $this->lib_upload->do_upload();
