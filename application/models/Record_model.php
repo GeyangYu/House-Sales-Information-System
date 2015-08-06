@@ -275,7 +275,7 @@ class Record_model extends CI_Model {
             'building_id'   => $building_id,
             'record_floor'  => $record_floor,
             'record_price'  => $record_price,
-            'record_area'   => $record_price,
+            'record_area'   => $record_area,
             'record_time'   => $record_time,
         );
         return $this->db->insert('house_record', $record);
